@@ -2,6 +2,7 @@ package bot
 
 import Environment
 import commands.BotCommand
+import commands.util.HelloCommand
 import listeners.BotListener
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
@@ -9,13 +10,11 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.MemberCachePolicy
-import repositories.BotRepository
 import javax.security.auth.login.LoginException
 
 object Bot {
-    private val commands = listOf<BotCommand>()
+    private val commands = listOf<BotCommand>(HelloCommand())
     private val listeners = listOf<BotListener>()
-    private val repositories = listOf<BotRepository>()
 
     lateinit var jda: JDA
 
@@ -64,4 +63,5 @@ object Bot {
             guild.updateCommands().addCommands(commands.map { it.slashCommandData }).queue()
         }
     }
+
 }
