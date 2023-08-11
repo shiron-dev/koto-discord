@@ -25,7 +25,7 @@ object Bot {
                 GatewayIntent.GUILD_MEMBERS,
                 GatewayIntent.GUILD_MESSAGES,
                 GatewayIntent.GUILD_VOICE_STATES,
-                GatewayIntent.MESSAGE_CONTENT
+                GatewayIntent.MESSAGE_CONTENT,
             )
                 .setRawEventsEnabled(true)
                 .setActivity(Activity.playing(Environment.activityMessage))
@@ -63,5 +63,4 @@ object Bot {
             guild.updateCommands().addCommands(commands.map { it.slashCommandData }).queue()
         }
     }
-
 }

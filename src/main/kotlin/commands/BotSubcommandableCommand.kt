@@ -2,10 +2,9 @@ package commands
 
 abstract class BotSubcommandableCommand(
     commandName: BotCommandMeta,
-    sharedDefault: Boolean = false
+    sharedDefault: Boolean = false,
 ) :
     BotCommand(
         commandName,
-        sharedDefault
-    ) {
-}
+        sharedDefault,
+    )

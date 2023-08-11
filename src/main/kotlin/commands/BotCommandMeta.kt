@@ -5,5 +5,5 @@ data class CommandPath(val path: String) {
 }
 
 enum class BotCommandMeta(val cmd: String, val commandPath: CommandPath, val description: String) {
-    HELLO("hello", CommandPath("koto.util.hello"), "挨拶をします。")
+    HELLO("hello", CommandPath("koto.util.hello"), "挨拶をします。"),
 }

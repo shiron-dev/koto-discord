@@ -17,7 +17,7 @@ abstract class BotCommand(val commandMeta: BotCommandMeta, private val sharedDef
         OptionData(
             OptionType.BOOLEAN,
             "shared",
-            "他の人にコマンドの実行結果が見えるかどうか。デフォルト値は${if (sharedDefault) "true(見える)" else "false(見えない)"}"
+            "他の人にコマンドの実行結果が見えるかどうか。デフォルト値は${if (sharedDefault) "true(見える)" else "false(見えない)"}",
         )
     }
 
@@ -37,7 +37,7 @@ abstract class BotCommand(val commandMeta: BotCommandMeta, private val sharedDef
         val eventData = BotSlashCommandEvent(
             event,
             event.guild!!,
-            event.channel
+            event.channel,
         )
 
         onSlashCommand(eventData)
@@ -49,7 +49,7 @@ abstract class BotCommand(val commandMeta: BotCommandMeta, private val sharedDef
 data class BotSlashCommandEvent(
     val event: SlashCommandInteractionEvent,
     val guild: Guild,
-    val channel: Channel
+    val channel: Channel,
 ) {
     fun replay(message: String) {
         event.hook.sendMessage(message).queue()

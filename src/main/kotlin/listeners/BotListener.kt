@@ -1,4 +1,3 @@
 package listeners
 
-abstract class BotListener {
-}
+abstract class BotListener

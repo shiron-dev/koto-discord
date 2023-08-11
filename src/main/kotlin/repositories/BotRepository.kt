@@ -1,4 +1,3 @@
 package repositories
 
-abstract class BotRepository {
-}
+abstract class BotRepository
