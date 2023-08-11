@@ -13,7 +13,7 @@ abstract class BotCommand(val commandMeta: BotCommandMeta, private val sharedDef
     ListenerAdapter() {
     open val commandOptions: List<OptionData> = listOf()
 
-    private val sharedOptionData by lazy {
+    protected val sharedOptionData by lazy {
         OptionData(
             OptionType.BOOLEAN,
             "shared",
@@ -22,11 +22,11 @@ abstract class BotCommand(val commandMeta: BotCommandMeta, private val sharedDef
     }
 
     open val slashCommandData: SlashCommandData
-        get() = Commands.slash(commandMeta.cmd, commandMeta.description).addOptions(commandOptions)
+        get() = Commands.slash(commandMeta.meta.cmd, commandMeta.meta.description).addOptions(commandOptions)
             .addOptions(sharedOptionData)
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
-        if (event.name != commandMeta.cmd) return
+        if (event.name != commandMeta.meta.cmd) return
         if (event.guild == null) {
             event.reply("このコマンドはサーバー内でのみ実行できます。").queue()
             return

@@ -4,6 +4,29 @@ data class CommandPath(val path: String) {
     val objs = path.split(".")
 }
 
-enum class BotCommandMeta(val cmd: String, val commandPath: CommandPath, val description: String) {
-    HELLO("hello", CommandPath("koto.util.hello"), "挨拶をします。"),
+data class BotCommandMetaData(
+    val cmd: String,
+    val description: String,
+    val commandPath: CommandPath,
+    val subcommands: List<BotSubcommandMetaData> = listOf(),
+) {
+    init {
+        for (cmd in subcommands) {
+            cmd.parentCommand = this
+        }
+    }
+}
+
+data class BotSubcommandMetaData(
+    val cmd: String,
+    val description: String? = null,
+) {
+    lateinit var parentCommand: BotCommandMetaData
+
+    val commandPath: CommandPath
+        get() = CommandPath("${parentCommand.commandPath.path}.$cmd")
+}
+
+enum class BotCommandMeta(val meta: BotCommandMetaData) {
+    HELLO(BotCommandMetaData("hello", "挨拶をします。", CommandPath("koto.util.hello"))),
 }
