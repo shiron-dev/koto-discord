@@ -38,10 +38,6 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
 application {
     mainClass.set("MainKt")
 }
@@ -62,7 +58,7 @@ tasks.check {
     dependsOn(ktlintCheck)
 }
 
-tasks.register<JavaExec>("ktlintFormat") {
+val ktlintFormat by tasks.registering(JavaExec::class) {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
     description = "Check Kotlin code style and format"
     classpath = ktlint
@@ -74,4 +70,9 @@ tasks.register<JavaExec>("ktlintFormat") {
         "**.kts",
         "!**/build/**",
     )
+}
+
+tasks.withType<KotlinCompile> {
+    dependsOn(ktlintFormat)
+    kotlinOptions.jvmTarget = "1.8"
 }
