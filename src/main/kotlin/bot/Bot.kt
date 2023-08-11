@@ -40,8 +40,10 @@ object Bot {
 
     fun start(): Boolean {
         if (Environment.isDevMode) {
-            val guild = Environment.devGuildId?.let { jda.getGuildById(it) } ?: return false
-            register(guild)
+            val devGuild = Environment.devGuildId?.let { jda.getGuildById(it) } ?: return false
+            register(devGuild)
+            val devChannel = Environment.devChannelId?.let { devGuild.getTextChannelById(it) }
+            devChannel?.sendMessage("Started")?.queue()
         } else {
             register()
         }
