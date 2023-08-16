@@ -6,6 +6,6 @@ import commands.BotSlashCommandEvent
 
 class HelloCommand : BotCommand(BotCommandMeta.HELLO) {
     override fun onSlashCommand(event: BotSlashCommandEvent) {
-        event.replay("${if (event.event.getOption("shared")?.asBoolean == true) "みなさん、" else ""}こんにちは！")
+        event.reply("${if (event.event.getOption("shared")?.asBoolean == true) "みなさん、" else ""}こんにちは！")
     }
 }

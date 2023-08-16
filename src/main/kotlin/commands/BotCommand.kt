@@ -51,7 +51,7 @@ data class BotSlashCommandEvent(
     val guild: Guild,
     val channel: Channel,
 ) {
-    fun replay(message: String) {
+    fun reply(message: String) {
         event.hook.sendMessage(message).queue()
     }
 }
