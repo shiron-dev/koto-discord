@@ -3,6 +3,7 @@ package bot
 import Environment
 import commands.BotCommand
 import commands.util.HelloCommand
+import commands.vc.notification.VCNotificationSubcommandable
 import listeners.BotListener
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
@@ -13,7 +14,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy
 import javax.security.auth.login.LoginException
 
 object Bot {
-    private val commands = listOf<BotCommand>(HelloCommand())
+    private val commands = listOf<BotCommand>(HelloCommand(), VCNotificationSubcommandable())
     private val listeners = listOf<BotListener>()
 
     lateinit var jda: JDA
