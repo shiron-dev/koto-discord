@@ -1,0 +1,12 @@
+on: push
+
+name: lint
+jobs:
+  gradle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: run check
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: check
