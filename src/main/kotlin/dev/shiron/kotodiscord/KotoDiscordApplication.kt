@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class KotoDiscordApplication
 
 fun main(args: Array<String>) {
-	runApplication<KotoDiscordApplication>(*args)
+    runApplication<KotoDiscordApplication>(*args)
 }
