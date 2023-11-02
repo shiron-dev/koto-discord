@@ -1,17 +1,27 @@
 package dev.shiron.kotodiscord.bot
 
 import dev.shiron.kotodiscord.AppProperties
+import dev.shiron.kotodiscord.DevelopProperties
+import dev.shiron.kotodiscord.NotificationProperties
+import dev.shiron.kotodiscord.controller.CommandController
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
+import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.MemberCachePolicy
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class KotoMain @Autowired constructor(
-    private val appProperties: AppProperties
+    private val appProperties: AppProperties,
+    private val notificationProperties: NotificationProperties,
+    private val developProperties: DevelopProperties,
+    private val messages: MessageSource,
+    private val commandController: CommandController
 ) {
     val jda: JDA by lazy {
         JDABuilder.createDefault(
@@ -29,6 +39,32 @@ class KotoMain @Autowired constructor(
 
     fun start(): Boolean {
         jda.awaitReady()
+
+        if (notificationProperties.isStartMessage) {
+            val guild = notificationProperties.guildID?.let { jda.getGuildById(it) } ?: return false
+            val channel = notificationProperties.channelID?.let { guild.getTextChannelById(it) }
+            channel?.sendMessage(
+                messages.getMessage("notification.message.start", arrayOf(jda.selfUser.asMention, Date().toString(), Random(System.currentTimeMillis()).nextInt(100000, 1000000).toString()), Locale.JAPAN)
+            )?.queue()
+        }
+
+        if (developProperties.isDevMode) {
+            val devGuild = developProperties.devGuildID?.let { jda.getGuildById(it) } ?: return false
+            register(devGuild)
+        } else {
+            register()
+        }
+
         return true
+    }
+
+    private fun register(guild: Guild? = null) {
+        val commands = commandController.getCommandsData()
+        if (guild == null) {
+            jda.updateCommands().addCommands(commands).queue()
+        } else {
+            guild.updateCommands().addCommands(commands).queue()
+        }
+        jda.addEventListener(commandController)
     }
 }
