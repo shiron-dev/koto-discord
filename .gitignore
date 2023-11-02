@@ -37,3 +37,5 @@ out/
 .vscode/
 
 db.sqlite3
+
+application-env.yml

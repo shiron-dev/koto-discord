@@ -6,3 +6,5 @@ spring:
       properties:
         hibernate:
           dialect: org.hibernate.community.dialect.SQLiteDialect
+  profiles:
+    include: env

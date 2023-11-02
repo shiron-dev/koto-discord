@@ -25,6 +25,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    implementation("org.hibernate.orm:hibernate-community-dialects")
+    runtimeOnly("org.xerial:sqlite-jdbc")
+
+    implementation("net.dv8tion:JDA:5.0.0-beta.17")
 }
 
 tasks.withType<KotlinCompile> {
