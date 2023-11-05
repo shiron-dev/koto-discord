@@ -2,6 +2,7 @@ package dev.shiron.kotodiscord.controller
 
 import dev.shiron.kotodiscord.util.BotSlashCommandData
 import dev.shiron.kotodiscord.util.CommandServiceClass
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
@@ -32,6 +33,14 @@ class CommandController @Autowired constructor(
             }
         }
         event.reply(messages.getMessage("command.error.notfound", arrayOf(event.name), Locale.JAPAN)).queue()
+    }
+
+    override fun onCommandAutoCompleteInteraction(event: CommandAutoCompleteInteractionEvent) {
+        for (command in commandServices) {
+            if (command.meta.name.lowercase() == event.name.lowercase()) {
+                command.onAutoComplete(event)
+            }
+        }
     }
 
     fun getCommandsData(): List<SlashCommandData> {

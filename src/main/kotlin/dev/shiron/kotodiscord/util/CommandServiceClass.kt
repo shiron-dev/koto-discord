@@ -1,6 +1,7 @@
 package dev.shiron.kotodiscord.util
 
 import dev.shiron.kotodiscord.util.service.BotServiceMeta
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
@@ -25,4 +26,6 @@ abstract class CommandServiceClass(meta: BotServiceMeta, private val messages: M
             .addOptions(sharedOptionData)
 
     abstract fun onSlashCommand(cmd: BotSlashCommandData)
+
+    open fun onAutoComplete(event: CommandAutoCompleteInteractionEvent) {}
 }
