@@ -1,7 +1,7 @@
 package dev.shiron.kotodiscord.service.command
 
 import dev.shiron.kotodiscord.util.BotSlashCommandData
-import dev.shiron.kotodiscord.util.CommandServiceClass
+import dev.shiron.kotodiscord.util.RunnableCommandServiceClass
 import dev.shiron.kotodiscord.util.service.BotServiceMeta
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
@@ -14,7 +14,7 @@ import java.util.*
 @Service
 class HelpService @Autowired constructor(
     private val messages: MessageSource
-) : CommandServiceClass(
+) : RunnableCommandServiceClass(
     BotServiceMeta.HELP,
     messages
 ) {

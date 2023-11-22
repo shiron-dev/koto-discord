@@ -1,7 +1,7 @@
 package dev.shiron.kotodiscord.controller
 
 import dev.shiron.kotodiscord.util.BotSlashCommandData
-import dev.shiron.kotodiscord.util.CommandServiceClass
+import dev.shiron.kotodiscord.util.RunnableCommandServiceClass
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -13,7 +13,7 @@ import java.util.*
 
 @Controller
 class CommandController @Autowired constructor(
-    private val commandServices: List<CommandServiceClass>,
+    private val commandServices: List<RunnableCommandServiceClass>,
     private val messages: MessageSource
 ) : ListenerAdapter() {
 

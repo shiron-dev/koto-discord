@@ -1,7 +1,7 @@
 package dev.shiron.kotodiscord.service.command
 
 import dev.shiron.kotodiscord.util.BotSlashCommandData
-import dev.shiron.kotodiscord.util.CommandServiceClass
+import dev.shiron.kotodiscord.util.RunnableCommandServiceClass
 import dev.shiron.kotodiscord.util.service.BotServiceMeta
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class HelloService @Autowired constructor(private val messages: MessageSource) : CommandServiceClass(
+class HelloService @Autowired constructor(private val messages: MessageSource) : RunnableCommandServiceClass(
     BotServiceMeta.HELLO,
     messages
 ) {

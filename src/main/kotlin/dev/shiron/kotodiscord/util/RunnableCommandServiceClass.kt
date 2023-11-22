@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import org.springframework.context.MessageSource
 import java.util.*
 
-abstract class CommandServiceClass(meta: BotServiceMeta, private val messages: MessageSource, val sharedDefault: Boolean = false) : BotServiceClass(meta) {
+abstract class RunnableCommandServiceClass(meta: BotServiceMeta, private val messages: MessageSource, val sharedDefault: Boolean = false) : BotServiceClass(meta) {
 
     open val commandOptions: List<OptionData> = listOf()
 
