@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import org.springframework.context.MessageSource
 import java.util.*
 
-abstract class RunnableCommandServiceClass(meta: RunnableCommandMeta, private val messages: MessageSource, val sharedDefault: Boolean = false) : BotServiceClass(meta) {
+abstract class RunnableCommandServiceClass(val runMeta: RunnableCommandMeta, private val messages: MessageSource, val sharedDefault: Boolean = false) : BotServiceClass(runMeta) {
 
     open val commandOptions: List<OptionData> = listOf()
 
@@ -22,7 +22,7 @@ abstract class RunnableCommandServiceClass(meta: RunnableCommandMeta, private va
     }
 
     open val slashCommandData: SlashCommandData
-        get() = Commands.slash(meta.name, messages.getMessage("command.description.${meta.name}", arrayOf(), Locale.JAPAN)).addOptions(commandOptions)
+        get() = Commands.slash(runMeta.commandName, messages.getMessage("command.description.${runMeta.commandName}", arrayOf(), Locale.JAPAN)).addOptions(commandOptions)
             .addOptions(sharedOptionData)
 
     abstract fun onSlashCommand(cmd: BotSlashCommandData)

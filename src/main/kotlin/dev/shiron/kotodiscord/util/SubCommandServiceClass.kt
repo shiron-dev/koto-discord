@@ -7,12 +7,11 @@ import org.springframework.context.MessageSource
 import java.util.*
 
 abstract class SubCommandServiceClass(
-    meta: SubCommandEnum,
+    val commandMeta: SubCommandEnum,
     private val messages: MessageSource
-) : RunnableCommandServiceClass(meta.meta, messages) {
+) : RunnableCommandServiceClass(commandMeta.metadata, messages) {
 
     override val slashCommandData: SlashCommandData
-        // TODO: group.name
-        get() = Commands.slash(meta.name, messages.getMessage("command.description.${meta.name}", arrayOf(), Locale.JAPAN)).addOptions(commandOptions)
+        get() = Commands.slash(commandMeta.metadata.commandName, messages.getMessage("command.description.${commandMeta.group.metadata.commandName}.${commandMeta.metadata.commandName}", arrayOf(), Locale.JAPAN)).addOptions(commandOptions)
             .addOptions(sharedOptionData)
 }

@@ -1,8 +1,8 @@
 package dev.shiron.kotodiscord.service.command
 
 import dev.shiron.kotodiscord.util.BotSlashCommandData
-import dev.shiron.kotodiscord.util.RunnableCommandServiceClass
-import dev.shiron.kotodiscord.util.meta.RunnableCommandEnum
+import dev.shiron.kotodiscord.util.SingleCommandServiceClass
+import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
@@ -14,8 +14,8 @@ import java.util.*
 @Service
 class HelpService @Autowired constructor(
     private val messages: MessageSource
-) : RunnableCommandServiceClass(
-    RunnableCommandEnum.HELP.meta,
+) : SingleCommandServiceClass(
+    SingleCommandEnum.HELP,
     messages
 ) {
 
@@ -31,7 +31,7 @@ class HelpService @Autowired constructor(
     override fun onAutoComplete(event: CommandAutoCompleteInteractionEvent) {
         when (event.focusedOption.name) {
             "command" -> {
-                val commands = RunnableCommandEnum.values().map { it.meta.name }
+                val commands = SingleCommandEnum.values().map { it.metadata.commandName }
                 event.replyChoiceStrings(
                     commands.filter {
                         it.startsWith(event.focusedOption.value.lowercase())
@@ -43,7 +43,7 @@ class HelpService @Autowired constructor(
 
     override fun onSlashCommand(cmd: BotSlashCommandData) {
         val command = cmd.event.getOption("command")?.asString?.lowercase()
-        val commands = RunnableCommandEnum.values().map { it.meta.name }
+        val commands = SingleCommandEnum.values().map { it.metadata.commandName }
         if (command != null) {
             if (commands.contains(command)) {
                 cmd.reply("### $command\n${getHelp(command)}")
