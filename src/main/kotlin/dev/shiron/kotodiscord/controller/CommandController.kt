@@ -1,5 +1,7 @@
 package dev.shiron.kotodiscord.controller
 
+import dev.shiron.kotodiscord.metrics.CommandHistory
+import dev.shiron.kotodiscord.metrics.MetricsClass
 import dev.shiron.kotodiscord.util.BotSlashCommandData
 import dev.shiron.kotodiscord.util.RunnableCommandServiceClass
 import dev.shiron.kotodiscord.util.SingleCommandServiceClass
@@ -14,13 +16,15 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
+import java.time.LocalDateTime
 import java.util.*
 
 @Controller
 class CommandController @Autowired constructor(
     private val singleCommandServices: List<SingleCommandServiceClass>,
     private val subCommandServices: List<SubCommandServiceClass>,
-    private val messages: MessageSource
+    private val messages: MessageSource,
+    private val metrics: MetricsClass
 ) : ListenerAdapter() {
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
@@ -33,7 +37,18 @@ class CommandController @Autowired constructor(
                 .queue()
             command.onSlashCommand(
                 BotSlashCommandData(
-                    event = event
+                    event = event,
+                    historyData = CommandHistory(
+                        commandName = "${event.name}.${event.subcommandName}",
+                        eventId = event.id,
+                        guildId = event.guild?.id,
+                        channelId = event.channel.id,
+                        userId = event.user.id,
+                        options = event.options.associate { it.name to it.asString },
+                        timestamp = LocalDateTime.now(),
+                        response = ""
+                    ),
+                    metrics = metrics
                 )
             )
         } else {

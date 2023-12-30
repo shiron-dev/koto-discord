@@ -69,12 +69,8 @@ class KotoMain @Autowired constructor(
     private fun register(guild: Guild? = null) {
         val commands = commandController.getCommandsData().toMutableList()
 
-        val retrieveCommandsAction = guild?.retrieveCommands() ?: jda.retrieveCommands()
+        guild?.retrieveCommands() ?: jda.retrieveCommands()
         val commandListUpdateAction = guild?.updateCommands() ?: jda.updateCommands()
-
-        retrieveCommandsAction.queue {
-            println(it.joinToString { "${it.name}: ${it.subcommands.joinToString { it.name }}" })
-        }
 
         commandListUpdateAction.addCommands(commands).queue()
 
