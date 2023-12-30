@@ -1,6 +1,6 @@
 package dev.shiron.kotodiscord.util
 
-import dev.shiron.kotodiscord.util.service.BotServiceMeta
+import dev.shiron.kotodiscord.util.meta.RunnableCommandMeta
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.Commands
@@ -9,11 +9,11 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import org.springframework.context.MessageSource
 import java.util.*
 
-abstract class RunnableCommandServiceClass(meta: BotServiceMeta, private val messages: MessageSource, val sharedDefault: Boolean = false) : BotServiceClass(meta) {
+abstract class RunnableCommandServiceClass(meta: RunnableCommandMeta, private val messages: MessageSource, val sharedDefault: Boolean = false) : BotServiceClass(meta) {
 
     open val commandOptions: List<OptionData> = listOf()
 
-    private val sharedOptionData by lazy {
+    protected val sharedOptionData by lazy {
         OptionData(
             OptionType.BOOLEAN,
             "shared",
@@ -22,7 +22,7 @@ abstract class RunnableCommandServiceClass(meta: BotServiceMeta, private val mes
     }
 
     open val slashCommandData: SlashCommandData
-        get() = Commands.slash(meta.name.lowercase(), messages.getMessage("command.description.${meta.name.lowercase()}", arrayOf(), Locale.JAPAN)).addOptions(commandOptions)
+        get() = Commands.slash(meta.name, messages.getMessage("command.description.${meta.name}", arrayOf(), Locale.JAPAN)).addOptions(commandOptions)
             .addOptions(sharedOptionData)
 
     abstract fun onSlashCommand(cmd: BotSlashCommandData)

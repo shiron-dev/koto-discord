@@ -8,8 +8,6 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.interactions.commands.Command
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.MemberCachePolicy
 import org.springframework.beans.factory.annotation.Autowired
@@ -73,55 +71,13 @@ class KotoMain @Autowired constructor(
 
         val retrieveCommandsAction = guild?.retrieveCommands() ?: jda.retrieveCommands()
         val commandListUpdateAction = guild?.updateCommands() ?: jda.updateCommands()
-        val deleteCommandById = { id: String -> guild?.deleteCommandById(id) ?: jda.deleteCommandById(id) }
 
         retrieveCommandsAction.queue {
-            val rmCommand = it.toMutableList()
-
-            for (command in commands.toList()) {
-                val include = run {
-                    for (retCmd in it) {
-                        if (equalsCommand(command, retCmd)) {
-                            return@run retCmd
-                        }
-                    }
-                    null
-                }
-                if (include !== null) {
-                    // 含まれている
-                    commands.remove(command)
-                    rmCommand.remove(include)
-                }
-            }
-
-            for (cmd in rmCommand) {
-                deleteCommandById(cmd.id).queue()
-            }
-            commandListUpdateAction.addCommands(commands).queue()
+            println(it.joinToString { "${it.name}: ${it.subcommands.joinToString { it.name }}" })
         }
+
+        commandListUpdateAction.addCommands(commands).queue()
 
         jda.addEventListener(commandController)
     }
-}
-
-private fun equalsCommand(a: SlashCommandData, b: Command): Boolean {
-    return a.name == b.name && a.description == b.description && a.options.size == b.options.size && (
-        a.options.isEmpty() || a.options.filterIndexed { index, optionData ->
-            run {
-                val aa = optionData
-                val bb = b.options[index]
-                return@run aa.name != bb.name || aa.description != bb.description || aa.type != bb.type || aa.isRequired != bb.isRequired
-            }
-        }.isEmpty()
-        ) && a.subcommands.size == b.subcommands.size && (
-        a.subcommands.isEmpty() || a.subcommands.filterIndexed { index, subcommandData ->
-            run {
-                val aa = subcommandData
-                val bb = b.subcommands[index]
-                println(aa.name)
-                println(bb.name)
-                return@run aa.name != bb.name || aa.description != bb.description || aa.options != bb.options
-            }
-        }.isEmpty()
-        )
 }
