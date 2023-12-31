@@ -1,0 +1,9 @@
+app:
+  activity-message: "Developmental bot"
+  notification:
+    guild-id: 983690330249506896
+    channel-id: 983690360020676649
+    is-start-message: true
+  dev:
+    is-dev-mode: true
+    dev-guild-id: 983690330249506896

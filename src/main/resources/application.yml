@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:sqlite:./db.sqlite3
+    driverClassName: org.sqlite.JDBC
+    jpa:
+      properties:
+        hibernate:
+          dialect: org.hibernate.community.dialect.SQLiteDialect
+  profiles:
+    include: env

@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "spring.datasource.jpa.properties.hibernate.dialect",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.jpa.properties.hibernate.dialect."
+  }
+] }
