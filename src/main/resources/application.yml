@@ -1,4 +1,7 @@
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
   datasource:
     url: jdbc:sqlite:./db.sqlite3
     driverClassName: org.sqlite.JDBC

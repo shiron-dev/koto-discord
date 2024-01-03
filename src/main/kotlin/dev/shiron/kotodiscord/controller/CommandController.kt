@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
@@ -29,8 +28,8 @@ class CommandController @Autowired constructor(
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
         val command = getCommand(event.name, event.subcommandName)
-
-        if (command != null) {
+        val guild = event.guild
+        if (command != null && guild != null) {
             event
                 .deferReply()
                 .setEphemeral((event.getOption("shared")?.asBoolean?.not()) ?: command.sharedDefault.not())
@@ -38,6 +37,7 @@ class CommandController @Autowired constructor(
             command.onSlashCommand(
                 BotSlashCommandData(
                     event = event,
+                    guild = guild,
                     historyData = CommandHistory(
                         commandName = "${event.name}.${event.subcommandName}",
                         eventId = event.id,
@@ -96,12 +96,8 @@ class CommandController @Autowired constructor(
                     arrayOf(),
                     Locale.JAPAN
                 )
-            ).addSubcommands(it.value.map { toSubcommandData(it.slashCommandData) })
+            ).addSubcommands(it.value.map { it.subcommandData })
         }
         return singleCommandServices.map { it.slashCommandData } + subCommandsData
     }
-}
-
-private fun toSubcommandData(slashCommandData: SlashCommandData): SubcommandData {
-    return SubcommandData(slashCommandData.name, slashCommandData.description)
 }

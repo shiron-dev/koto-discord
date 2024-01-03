@@ -8,8 +8,12 @@ import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 
 @Service
-class ListCommand @Autowired constructor(messages: MessageSource) : SubCommandServiceClass(SubCommandEnum.VC_NOTIFICATION_LIST, messages) {
+class ListCommand @Autowired constructor(private val vcService: VCService, messages: MessageSource) : SubCommandServiceClass(SubCommandEnum.VC_NOTIFICATION_LIST, messages) {
     override fun onSlashCommand(cmd: BotSlashCommandData) {
-        cmd.reply("list command")
+        val vcData = vcService.listVCNotification(cmd.guild.idLong)
+        cmd.reply(
+            "> VC通知設定リスト\n" +
+                vcData.joinToString("\n") { "- <#`${it.vcCategoryId ?: it.vcChannelId}`> -> `<#${it.textChannelId}>`" }
+        )
     }
 }
