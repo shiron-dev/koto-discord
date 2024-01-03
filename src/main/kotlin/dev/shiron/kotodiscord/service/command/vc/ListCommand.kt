@@ -13,7 +13,10 @@ class ListCommand @Autowired constructor(private val vcService: VCService, messa
         val vcData = vcService.listVCNotification(cmd.guild.idLong)
         cmd.reply(
             "> VC通知設定リスト\n" +
-                vcData.joinToString("\n") { "- <#`${it.vcCategoryId ?: it.vcChannelId}`> -> `<#${it.textChannelId}>`" }
+                vcData.joinToString("\n") {
+                    val vcId = it.vcCategoryId ?: it.vcChannelId
+                    "- ${if (vcId == null)"`サーバー全体`" else "<#$vcId>" } -> <#${it.textChannelId}>"
+                }
         )
     }
 }

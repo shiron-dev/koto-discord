@@ -45,11 +45,11 @@ class SetCommand @Autowired constructor(
         }
 
         if (vc?.type != ChannelType.VOICE && vc?.type != ChannelType.STAGE && vc?.type != ChannelType.CATEGORY && vc != null) {
-            cmd.reply(messages.getMessage("command.error.vc_notification.set.vc", arrayOf(), Locale.JAPAN))
+            cmd.reply(messages.getMessage("command.message.vc_notification.set.vc", arrayOf(), Locale.JAPAN))
             return
         }
-        if (text.type != ChannelType.TEXT || text.type != ChannelType.NEWS || text.type != ChannelType.FORUM) {
-            cmd.reply(messages.getMessage("command.error.vc_notification.set.text", arrayOf(), Locale.JAPAN))
+        if (text.type != ChannelType.TEXT && text.type != ChannelType.NEWS && text.type != ChannelType.FORUM) {
+            cmd.reply(messages.getMessage("command.message.vc_notification.set.text", arrayOf(), Locale.JAPAN))
             return
         }
 
