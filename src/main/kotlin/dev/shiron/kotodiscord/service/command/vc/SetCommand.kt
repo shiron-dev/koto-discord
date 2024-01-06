@@ -48,7 +48,19 @@ class SetCommand
 
         override fun onSlashCommand(cmd: BotSlashCommandData) {
             // TODO: 重複登録を禁止する
-            // TODO: 25個以上登録できないようにする
+            vcService.dataCount(cmd.guild.idLong).let {
+                if (it > 10) {
+                    cmd.reply(
+                        messages.getMessage(
+                            "command.message.vc_notification.set.limit",
+                            arrayOf(),
+                            Locale.JAPAN,
+                        ),
+                    )
+                    return
+                }
+            }
+
             val vc = cmd.event.getOption("vc")?.asChannel
             val text = cmd.event.getOption("text")?.asChannel
             if (text == null) {

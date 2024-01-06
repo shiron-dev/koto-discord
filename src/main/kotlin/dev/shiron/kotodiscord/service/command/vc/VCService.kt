@@ -23,4 +23,8 @@ class VCService
         fun listVCNotification(guildId: Long): List<VCNotificationData> {
             return vcRepository.findAllByGuildId(guildId) ?: emptyList()
         }
+
+        fun dataCount(guildId: Long): Long {
+            return vcRepository.countAllByGuildId(guildId)
+        }
     }
