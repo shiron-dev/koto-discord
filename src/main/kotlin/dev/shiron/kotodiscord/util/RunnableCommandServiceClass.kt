@@ -7,15 +7,24 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData
 import org.springframework.context.MessageSource
 import java.util.*
 
-abstract class RunnableCommandServiceClass(val runMeta: RunnableCommandMeta, private val messages: MessageSource, val sharedDefault: Boolean = false) : BotServiceClass(runMeta) {
-
+abstract class RunnableCommandServiceClass(
+    val runMeta: RunnableCommandMeta,
+    private val messages: MessageSource,
+    val sharedDefault: Boolean = false,
+) : BotServiceClass(
+        runMeta,
+    ) {
     open val commandOptions: List<OptionData> = listOf()
 
     protected val sharedOptionData by lazy {
         OptionData(
             OptionType.BOOLEAN,
             "shared",
-            messages.getMessage("command.option.share", arrayOf(if (sharedDefault) "true(見える)" else "false(見えない)"), Locale.JAPAN)
+            messages.getMessage(
+                "command.option.share",
+                arrayOf(if (sharedDefault) "true(見える)" else "false(見えない)"),
+                Locale.JAPAN,
+            ),
         )
     }
 

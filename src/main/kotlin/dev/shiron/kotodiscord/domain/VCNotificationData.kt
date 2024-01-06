@@ -12,5 +12,5 @@ data class VCNotificationData(
     val guildId: Long,
     val vcChannelId: Long?,
     val vcCategoryId: Long?,
-    val textChannelId: Long
+    val textChannelId: Long,
 )

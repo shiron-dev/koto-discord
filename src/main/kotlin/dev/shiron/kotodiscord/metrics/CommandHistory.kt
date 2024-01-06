@@ -16,5 +16,5 @@ data class CommandHistory(
     @JsonSerialize(using = LocalDateTimeSerializer::class)
     @JsonDeserialize(using = LocalDateTimeDeserializer::class)
     val timestamp: LocalDateTime,
-    var response: String
+    var response: String,
 )

@@ -6,7 +6,7 @@ plugins {
     kotlin("plugin.spring") version "1.8.22"
     kotlin("plugin.jpa") version "1.8.22"
 
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
 }
 
 group = "dev.shiron"
@@ -18,6 +18,10 @@ java {
 
 repositories {
     mavenCentral()
+}
+
+ktlint {
+    enableExperimentalRules.set(true)
 }
 
 dependencies {

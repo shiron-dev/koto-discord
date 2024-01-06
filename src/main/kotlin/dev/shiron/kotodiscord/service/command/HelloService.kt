@@ -9,11 +9,21 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class HelloService @Autowired constructor(private val messages: MessageSource) : SingleCommandServiceClass(
-    SingleCommandEnum.HELLO,
-    messages
-) {
-    override fun onSlashCommand(cmd: BotSlashCommandData) {
-        cmd.reply(messages.getMessage("command.message.hello", arrayOf(cmd.event.user.asMention), Locale.JAPAN))
+class HelloService
+    @Autowired
+    constructor(
+        private val messages: MessageSource,
+    ) : SingleCommandServiceClass(
+            SingleCommandEnum.HELLO,
+            messages,
+        ) {
+        override fun onSlashCommand(cmd: BotSlashCommandData) {
+            cmd.reply(
+                messages.getMessage(
+                    "command.message.hello",
+                    arrayOf(cmd.event.user.asMention),
+                    Locale.JAPAN,
+                ),
+            )
+        }
     }
-}
