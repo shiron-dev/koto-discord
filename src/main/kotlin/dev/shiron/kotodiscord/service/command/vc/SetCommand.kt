@@ -47,18 +47,16 @@ class SetCommand
                 )
 
         override fun onSlashCommand(cmd: BotSlashCommandData) {
-            // TODO: 重複登録を禁止する
-            vcService.dataCount(cmd.guild.idLong).let {
-                if (it > 10) {
-                    cmd.reply(
-                        messages.getMessage(
-                            "command.message.vc_notification.set.limit",
-                            arrayOf(),
-                            Locale.JAPAN,
-                        ),
-                    )
-                    return
-                }
+            val dataList = vcService.listVCNotification(cmd.guild.idLong)
+            if (dataList.size >= 10) {
+                cmd.reply(
+                    messages.getMessage(
+                        "command.message.vc_notification.set.limit",
+                        arrayOf(),
+                        Locale.JAPAN,
+                    ),
+                )
+                return
             }
 
             val vc = cmd.event.getOption("vc")?.asChannel
@@ -95,14 +93,27 @@ class SetCommand
                 return
             }
 
-            vcService.setVCNotification(
+            val register =
                 VCNotificationData(
                     guildId = cmd.guild.idLong,
                     vcCategoryId = if (vc?.type == ChannelType.CATEGORY) vc.idLong else null,
                     vcChannelId = if (vc?.type == ChannelType.VOICE) vc.idLong else null,
                     textChannelId = text.idLong,
-                ),
-            )
+                )
+            for (data in dataList) {
+                if (data.like(register)) {
+                    cmd.reply(
+                        messages.getMessage(
+                            "command.message.vc_notification.set.already",
+                            arrayOf(),
+                            Locale.JAPAN,
+                        ),
+                    )
+                    return
+                }
+            }
+
+            vcService.setVCNotification(register)
             cmd.reply(
                 messages.getMessage(
                     "command.message.vc_notification.set.success",
