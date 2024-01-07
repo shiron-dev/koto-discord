@@ -20,4 +20,11 @@ data class VCNotificationData(
             vcCategoryId == other.vcCategoryId &&
             textChannelId == other.textChannelId
     }
+
+    val vcName: String
+        get() =
+            run {
+                val vcId = vcCategoryId ?: vcChannelId
+                return if (vcId == null) "`サーバー全体`" else "<#$vcId>"
+            }
 }

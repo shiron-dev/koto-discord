@@ -13,4 +13,8 @@ enum class SubCommandEnum(val metadata: RunnableCommandMeta, val group: SubComma
         RunnableCommandMeta("list"),
         SubCommandGroupEnum.VC_NOTIFICATION,
     ),
+    VC_NOTIFICATION_REMOVE(
+        RunnableCommandMeta("remove"),
+        SubCommandGroupEnum.VC_NOTIFICATION,
+    ),
 }
