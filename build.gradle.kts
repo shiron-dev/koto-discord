@@ -58,4 +58,5 @@ tasks.withType<Test> {
 
 tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     launchScript()
+    archiveFileName.set("koto.jar")
 }
