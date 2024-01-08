@@ -6,5 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class AppProperties(
     var token: String? = null,
     var activityMessage: String? = null,
-    var metricsDir: String? = null
+    var metricsDir: String? = null,
+    var actionDataCleanMin: Int? = null,
 )

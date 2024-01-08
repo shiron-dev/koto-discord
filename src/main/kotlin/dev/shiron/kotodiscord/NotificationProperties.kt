@@ -6,5 +6,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class NotificationProperties(
     var guildID: String? = null,
     var channelID: String? = null,
-    var isStartMessage: Boolean = false
+    var isStartMessage: Boolean = false,
 )

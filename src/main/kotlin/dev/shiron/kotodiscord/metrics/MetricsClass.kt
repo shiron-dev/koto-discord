@@ -15,26 +15,36 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Component
-class MetricsClass @Autowired constructor(private val appProperties: AppProperties) {
-    fun commandRun(history: CommandHistory) {
-        try {
-            BufferedWriter(
-                FileWriter(
-                    File(appProperties.metricsDir, "run_history.log"),
-                    true
-                )
-            ).use { writer ->
-                val timeModule = JavaTimeModule()
-                timeModule.addDeserializer<LocalDateTime>(
-                    LocalDateTime::class.java,
-                    LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME)
-                )
-                val str = ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).registerModules(timeModule)
-                    .writeValueAsString(history)
-                writer.write("$str\n")
+class MetricsClass
+    @Autowired
+    constructor(private val appProperties: AppProperties) {
+        fun commandRun(history: CommandHistory) {
+            try {
+                BufferedWriter(
+                    FileWriter(
+                        File(appProperties.metricsDir, "run_history.log"),
+                        true,
+                    ),
+                ).use { writer ->
+                    val timeModule = JavaTimeModule()
+                    timeModule.addDeserializer(
+                        LocalDateTime::class.java,
+                        LocalDateTimeDeserializer(
+                            DateTimeFormatter.ISO_DATE_TIME,
+                        ),
+                    )
+                    val str =
+                        ObjectMapper().configure(
+                            SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+                            false,
+                        ).registerModules(
+                            timeModule,
+                        )
+                            .writeValueAsString(history)
+                    writer.write("$str\n")
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
-        } catch (e: IOException) {
-            e.printStackTrace()
         }
     }
-}

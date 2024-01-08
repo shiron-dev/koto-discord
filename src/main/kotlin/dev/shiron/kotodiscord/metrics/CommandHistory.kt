@@ -13,8 +13,9 @@ data class CommandHistory(
     val channelId: String,
     val userId: String,
     val options: Map<String, String>,
+    val isAction: Boolean,
     @JsonSerialize(using = LocalDateTimeSerializer::class)
     @JsonDeserialize(using = LocalDateTimeDeserializer::class)
     val timestamp: LocalDateTime,
-    var response: String
+    var response: String,
 )
