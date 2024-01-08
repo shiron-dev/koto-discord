@@ -11,3 +11,5 @@ spring:
           dialect: org.hibernate.community.dialect.SQLiteDialect
   profiles:
     include: env
+app:
+  action-data-clean-min: 60

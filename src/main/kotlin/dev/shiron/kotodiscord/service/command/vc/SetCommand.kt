@@ -1,8 +1,8 @@
 package dev.shiron.kotodiscord.service.command.vc
 
 import dev.shiron.kotodiscord.domain.VCNotificationData
-import dev.shiron.kotodiscord.util.BotSlashCommandData
 import dev.shiron.kotodiscord.util.SubCommandServiceClass
+import dev.shiron.kotodiscord.util.data.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.interactions.commands.OptionType

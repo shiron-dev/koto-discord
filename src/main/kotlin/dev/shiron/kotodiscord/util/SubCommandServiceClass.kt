@@ -1,5 +1,7 @@
 package dev.shiron.kotodiscord.util
 
+import dev.shiron.kotodiscord.util.data.BotActionData
+import dev.shiron.kotodiscord.util.data.ComponentIdData
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import org.springframework.context.MessageSource
@@ -20,4 +22,18 @@ abstract class SubCommandServiceClass(
                 ),
             ).addOptions(commandOptions)
                 .addOptions(sharedOptionData)
+
+    override fun getComponentId(key: String): String {
+        return ActionDataManager.newActionData(
+            BotActionData(
+                isShow = true,
+                key = key,
+                componentIdData =
+                    ComponentIdData(
+                        "${commandMeta.group.metadata.commandName}.${commandMeta.metadata.commandName}",
+                        null,
+                    ),
+            ),
+        )
+    }
 }
