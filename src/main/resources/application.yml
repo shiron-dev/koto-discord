@@ -13,3 +13,4 @@ spring:
     include: env
 app:
   action-data-clean-min: 60
+  invite-link: "https://discord.gg/EyfCfV7zaS"
