@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository
 @Repository
 interface VCNotificationDataRepository : CrudRepository<VCNotificationData, Long?> {
     fun findAllByGuildId(guildId: Long?): List<VCNotificationData>?
-
-    fun countAllByGuildId(guildId: Long?): Long
 }
