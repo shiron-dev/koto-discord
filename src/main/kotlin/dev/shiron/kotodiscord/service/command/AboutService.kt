@@ -59,7 +59,7 @@ class AboutService
                 .addActionRow(
                     Button.link(
                         appProperties.inviteLink ?: "",
-                        messages.getMessage("button.about.support", arrayOf(), Locale.JAPAN),
+                        messages.getMessage("button.support", arrayOf(), Locale.JAPAN),
                     ),
                 )
                 .queue()

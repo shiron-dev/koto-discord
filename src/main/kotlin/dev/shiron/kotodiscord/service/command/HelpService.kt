@@ -1,11 +1,14 @@
 package dev.shiron.kotodiscord.service.command
 
+import dev.shiron.kotodiscord.AppProperties
 import dev.shiron.kotodiscord.util.SingleCommandServiceClass
 import dev.shiron.kotodiscord.util.data.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
+import dev.shiron.kotodiscord.util.meta.SubCommandEnum
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
+import net.dv8tion.jda.api.interactions.components.buttons.Button
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
@@ -15,11 +18,16 @@ import java.util.*
 class HelpService
     @Autowired
     constructor(
+        private val appProperties: AppProperties,
         private val messages: MessageSource,
     ) : SingleCommandServiceClass(
             SingleCommandEnum.HELP,
             messages,
         ) {
+        val commands =
+            SingleCommandEnum.values().map { it.metadata.commandName } +
+                SubCommandEnum.values().map { "${it.group.metadata.commandName} ${it.metadata.commandName}" }
+
         override val commandOptions: List<OptionData>
             get() =
                 listOf(
@@ -37,10 +45,12 @@ class HelpService
         override fun onAutoComplete(event: CommandAutoCompleteInteractionEvent) {
             when (event.focusedOption.name) {
                 "command" -> {
-                    val commands = SingleCommandEnum.values().map { it.metadata.commandName }
                     event.replyChoiceStrings(
                         commands.filter {
-                            it.startsWith(event.focusedOption.value.lowercase())
+                            it.startsWith(event.focusedOption.value.lowercase()) ||
+                                it.split(" ").getOrNull(1)?.startsWith(
+                                    event.focusedOption.value.lowercase(),
+                                ) == true
                         },
                     ).queue()
                 }
@@ -49,12 +59,22 @@ class HelpService
 
         override fun onSlashCommand(cmd: BotSlashCommandData) {
             val command = cmd.event.getOption("command")?.asString?.lowercase()
-            val commands = SingleCommandEnum.values().map { it.metadata.commandName }
+
+            fun reply(message: String) {
+                cmd.event.hook.sendMessage(message)
+                    .addActionRow(
+                        Button.link(
+                            appProperties.inviteLink ?: "",
+                            messages.getMessage("button.support", arrayOf(), Locale.JAPAN),
+                        ),
+                    ).queue()
+            }
+
             if (command != null) {
                 if (commands.contains(command)) {
-                    cmd.reply("### $command\n${getHelp(command)}")
+                    reply("### $command\n${getHelp(command)}")
                 } else {
-                    cmd.reply(
+                    reply(
                         messages.getMessage(
                             "command.message.help.notfound",
                             arrayOf(command),
@@ -63,21 +83,22 @@ class HelpService
                     )
                 }
             } else {
-                cmd.reply(
+                reply(
                     commands.joinToString(
-                        "\n\n",
+                        "\n",
                     ) { "### $it\n ${getHelp(it)}" },
                 )
             }
         }
 
         private fun getHelp(command: String): String {
+            val cmdStr = command.replace(" ", ".")
             return messages.getMessage(
-                "command.help.$command",
+                "command.help.$cmdStr",
                 arrayOf(),
                 null,
                 Locale.JAPAN,
             )
-                ?: messages.getMessage("command.description.$command", arrayOf(), Locale.JAPAN)
+                ?: messages.getMessage("command.description.$cmdStr", arrayOf(), Locale.JAPAN)
         }
     }
