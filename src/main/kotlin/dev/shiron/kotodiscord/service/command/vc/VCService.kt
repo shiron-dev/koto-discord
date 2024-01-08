@@ -33,23 +33,37 @@ class VCService
         override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {
             val guild = event.guild
             val allData = vcRepository.findAllByGuildId(guild.idLong) ?: return
-            val textChannelList = mutableListOf<Long>()
+
+            data class TextData(
+                val textChannelId: Long,
+                val isJoin: Boolean,
+                val isLeft: Boolean,
+            )
+
+            val textDataList = mutableListOf<TextData>()
 
             for (data in allData) {
                 val isJoin =
                     event.channelJoined != null && (
                         data.vcChannelId == event.channelJoined?.idLong ||
-                            data.vcCategoryId == event.channelJoined?.parentCategoryIdLong
+                            data.vcCategoryId == event.channelJoined?.parentCategoryIdLong ||
+                            (data.vcCategoryId == null && data.vcChannelId == null)
                     )
                 val isLeft =
                     event.channelLeft != null && (
                         data.vcChannelId == event.channelLeft?.idLong ||
-                            data.vcCategoryId == event.channelLeft?.parentCategoryIdLong
+                            data.vcCategoryId == event.channelLeft?.parentCategoryIdLong ||
+                            (data.vcCategoryId == null && data.vcChannelId == null)
                     )
-                val isAll = data.vcChannelId == null && data.vcCategoryId == null
 
-                if (isJoin || isLeft || isAll) {
-                    textChannelList.add(data.textChannelId)
+                if (isJoin || isLeft) {
+                    textDataList.add(
+                        TextData(
+                            data.textChannelId,
+                            isJoin,
+                            isLeft,
+                        ),
+                    )
                 }
             }
 
@@ -62,23 +76,18 @@ class VCService
             fmt.timeZone = timeZoneJP
             eb.setFooter(fmt.format(date))
 
-            val isJoin = event.channelJoined != null
-            val isLeft = event.channelLeft != null
-            if (isJoin && isLeft) {
-                eb.setTitle("Change")
-                eb.setDescription(messages.getMessage("service.message.vc_notification.change", arrayOf(event.member.asMention, event.channelLeft?.asMention, event.channelJoined?.asMention), Locale.JAPAN))
-            } else if (isJoin) {
-                eb.setTitle("Join")
-                eb.setDescription(messages.getMessage("service.message.vc_notification.join", arrayOf(event.member.asMention, event.channelJoined?.asMention), Locale.JAPAN))
-            } else if (isLeft) {
-                eb.setTitle("Left")
-                eb.setDescription(messages.getMessage("service.message.vc_notification.left", arrayOf(event.member.asMention, event.channelLeft?.asMention), Locale.JAPAN))
+            for (textData in textDataList) {
+                if (textData.isJoin && textData.isLeft) {
+                    eb.setTitle("Change")
+                    eb.setDescription(messages.getMessage("service.message.vc_notification.change", arrayOf(event.member.asMention, event.channelLeft?.asMention, event.channelJoined?.asMention), Locale.JAPAN))
+                } else if (textData.isJoin) {
+                    eb.setTitle("Join")
+                    eb.setDescription(messages.getMessage("service.message.vc_notification.join", arrayOf(event.member.asMention, event.channelJoined?.asMention), Locale.JAPAN))
+                } else if (textData.isLeft) {
+                    eb.setTitle("Left")
+                    eb.setDescription(messages.getMessage("service.message.vc_notification.left", arrayOf(event.member.asMention, event.channelLeft?.asMention), Locale.JAPAN))
+                }
+                guild.getTextChannelById(textData.textChannelId)?.sendMessage("")?.setEmbeds(eb.build())?.queue()
             }
-
-            for (textChannel in textChannelList) {
-                guild.getTextChannelById(textChannel)?.sendMessage("")?.setEmbeds(eb.build())?.queue()
-            }
-
-            // guild.getTextChannelById(data.textChannelId)?.sendMessage(messages.getMessage("service.message.vc_notification.join", arrayOf(event.member.asMention, data.vcName), Locale.JAPAN))?.queue()
         }
     }
