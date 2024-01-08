@@ -7,10 +7,15 @@ plugins {
     kotlin("plugin.jpa") version "1.8.22"
 
     id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
+
+    id("com.palantir.git-version") version "2.0.0"
 }
 
 group = "dev.shiron"
-version = "0.0.1-SNAPSHOT"
+val versionDetails: groovy.lang.Closure<com.palantir.gradle.gitversion.VersionDetails> by extra
+val details = versionDetails()
+version = details.lastTag
+val implementationVersion = "$version-#${details.gitHash.substring(0, 7)}"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -49,4 +54,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    launchScript()
 }

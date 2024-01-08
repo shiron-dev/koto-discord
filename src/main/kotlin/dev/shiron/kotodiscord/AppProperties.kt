@@ -8,4 +8,5 @@ data class AppProperties(
     var activityMessage: String? = null,
     var metricsDir: String? = null,
     var actionDataCleanMin: Int? = null,
+    var inviteLink: String? = null,
 )
