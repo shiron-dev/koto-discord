@@ -49,7 +49,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASS }}
           strip_components: 2
           source: "build/libs/koto.jar"
-          target: ${{ secrets.SERVER_DEPLOY_DIR }}E
+          target: ${{ secrets.SERVER_DEPLOY_DIR }}
       - name: Run
         uses: appleboy/ssh-action@master
         with:
