@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/shiron-dev/koto-discord/compare/v1.0.0...v1.0.1) (2024-01-09)
+
+
+### Bug Fixes
+
+* release.yml ([79c5277](https://github.com/shiron-dev/koto-discord/commit/79c52775ff58734a9381bf9bc4243c7bf8af4175))
+
 ## 1.0.0 (2024-01-08)
 
 
