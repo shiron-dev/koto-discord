@@ -38,7 +38,7 @@ dependencies {
     implementation("org.hibernate.orm:hibernate-community-dialects")
     runtimeOnly("org.xerial:sqlite-jdbc")
 
-    implementation("net.dv8tion:JDA:5.0.0-beta.19")
+    implementation("net.dv8tion:JDA:5.0.0-beta.20")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
