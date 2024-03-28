@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/shiron-dev/koto-discord/compare/v1.0.1...v1.1.0) (2024-03-28)
+
+
+### Features
+
+* update vc notify massage ([e8a1df2](https://github.com/shiron-dev/koto-discord/commit/e8a1df2947de8393bb005153d3cc2b2298341dba))
+
 ## [1.0.1](https://github.com/shiron-dev/koto-discord/compare/v1.0.0...v1.0.1) (2024-01-09)
 
 
