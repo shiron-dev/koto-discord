@@ -79,13 +79,48 @@ class VCService
             for (textData in textDataList) {
                 if (textData.isJoin && textData.isLeft) {
                     eb.setTitle("Change")
-                    eb.setDescription(messages.getMessage("service.message.vc_notification.change", arrayOf(event.member.asMention, event.channelLeft?.asMention, event.channelJoined?.asMention), Locale.JAPAN))
+                    eb.setDescription(
+                        messages.getMessage(
+                            "service.message.vc_notification.change",
+                            arrayOf(
+                                event.guild.name,
+                                event.member.effectiveName,
+                                event.member.asMention,
+                                event.channelLeft?.asMention,
+                                event.channelJoined?.asMention,
+                            ),
+                            Locale.JAPAN,
+                        ),
+                    )
                 } else if (textData.isJoin) {
                     eb.setTitle("Join")
-                    eb.setDescription(messages.getMessage("service.message.vc_notification.join", arrayOf(event.member.asMention, event.channelJoined?.asMention), Locale.JAPAN))
+                    eb.setDescription(
+                        messages.getMessage(
+                            "service.message.vc_notification.join",
+                            arrayOf(
+                                event.guild.name,
+                                event.member.effectiveName,
+                                event.channelJoined?.name,
+                                event.member.asMention,
+                                event.channelJoined?.asMention,
+                            ),
+                            Locale.JAPAN,
+                        ),
+                    )
                 } else if (textData.isLeft) {
                     eb.setTitle("Left")
-                    eb.setDescription(messages.getMessage("service.message.vc_notification.left", arrayOf(event.member.asMention, event.channelLeft?.asMention), Locale.JAPAN))
+                    eb.setDescription(
+                        messages.getMessage(
+                            "service.message.vc_notification.left",
+                            arrayOf(
+                                event.guild.name,
+                                event.member.effectiveName,
+                                event.member.asMention,
+                                event.channelLeft?.asMention,
+                            ),
+                            Locale.JAPAN,
+                        ),
+                    )
                 }
                 guild.getTextChannelById(textData.textChannelId)?.sendMessage("")?.setEmbeds(eb.build())?.queue()
             }
