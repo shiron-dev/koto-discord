@@ -73,11 +73,21 @@ class KotoMain
             }
 
             if (developProperties.isDevMode) {
+                jda.retrieveCommands().queue {
+                    println("Global Commands:\n${it.joinToString { cmd -> cmd.name }}")
+                    for (cmd in it) {
+                        jda.deleteCommandById(cmd.id).queue()
+                    }
+                }
+
                 val devGuild =
                     developProperties.devGuildID?.let {
                         jda.getGuildById(it)
                     } ?: return false
                 register(devGuild)
+                devGuild.retrieveCommands().queue {
+                    println("Dev Guild Commands:\n${it.joinToString { cmd -> cmd.name }}")
+                }
             } else {
                 register()
             }
