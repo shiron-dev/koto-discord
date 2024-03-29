@@ -1,7 +1,9 @@
 package dev.shiron.kotodiscord.util
 
+import dev.shiron.kotodiscord.util.data.BotButtonData
 import dev.shiron.kotodiscord.util.data.BotSlashCommandData
 import dev.shiron.kotodiscord.util.data.BotStringSelectData
+import dev.shiron.kotodiscord.util.data.ComponentReplayType
 import dev.shiron.kotodiscord.util.meta.RunnableCommandMeta
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
@@ -34,7 +36,12 @@ abstract class RunnableCommandServiceClass(
 
     open fun onAutoComplete(event: CommandAutoCompleteInteractionEvent) {}
 
+    open fun onButton(event: BotButtonData) {}
+
     open fun onStringSelect(event: BotStringSelectData) {}
 
-    abstract fun getComponentId(key: String): String
+    abstract fun getComponentId(
+        key: String,
+        componentReplayType: ComponentReplayType = ComponentReplayType.REPLAY,
+    ): String
 }
