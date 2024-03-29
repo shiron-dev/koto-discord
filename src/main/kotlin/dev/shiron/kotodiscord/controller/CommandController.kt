@@ -84,7 +84,7 @@ class CommandController
             val guild = event.guild
             val actionData = ActionDataManager[event.componentId]
             if (actionData == null) {
-                event.reply(messages.getMessage("command.error.action", arrayOf(), Locale.JAPAN)).queue()
+                event.reply(messages.getMessage("command.error.action", arrayOf(), Locale.JAPAN)).setEphemeral(true).queue()
                 return
             }
             val command = getCommandFromComponentId(actionData.componentIdData)
