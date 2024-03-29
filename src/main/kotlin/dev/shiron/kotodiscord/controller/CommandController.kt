@@ -12,6 +12,7 @@ import dev.shiron.kotodiscord.util.meta.SubCommandGroupEnum
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
+import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.build.Commands
@@ -166,6 +167,51 @@ class CommandController
             }
 
             command.onStringSelect(data)
+        }
+
+        override fun onEntitySelectInteraction(event: EntitySelectInteractionEvent) {
+            val guild = event.guild
+            val actionData = ActionDataManager[event.componentId]
+            if (actionData == null) {
+                event.reply(messages.getMessage("command.error.action", arrayOf(), Locale.JAPAN)).setEphemeral(true).queue()
+                return
+            }
+            val command = getCommandFromComponentId(actionData.componentIdData)
+            if (guild == null || command == null) {
+                event.reply(messages.getMessage("command.error.internal", arrayOf(), Locale.JAPAN)).queue()
+                return
+            }
+
+            ActionDataManager.removeActionData(event.componentId)
+
+            val data =
+                BotEntitySelectData(
+                    event = event,
+                    values = event.values,
+                    guild = guild,
+                    actionData = actionData,
+                    historyData =
+                        CommandHistory(
+                            commandName = actionData.componentIdData.componentId,
+                            eventId = event.id,
+                            guildId = event.guild?.id,
+                            channelId = event.channel.id,
+                            userId = event.user.id,
+                            options = mapOf(),
+                            isAction = true,
+                            timestamp = LocalDateTime.now(),
+                            response = "",
+                        ),
+                    metrics = metrics,
+                )
+
+            when (actionData.componentReplayType) {
+                ComponentReplayType.REPLAY -> event.deferReply().setEphemeral(actionData.isShow).queue()
+                ComponentReplayType.EDIT -> event.deferEdit().queue()
+                else -> {}
+            }
+
+            command.onEntitySelect(data)
         }
 
         fun getCommand(
