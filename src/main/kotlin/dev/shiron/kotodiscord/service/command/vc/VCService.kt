@@ -85,6 +85,7 @@ class VCService
                             arrayOf(
                                 event.guild.name,
                                 event.member.effectiveName,
+                                event.channelJoined?.name,
                                 event.member.asMention,
                                 event.channelLeft?.asMention,
                                 event.channelJoined?.asMention,
@@ -115,6 +116,7 @@ class VCService
                             arrayOf(
                                 event.guild.name,
                                 event.member.effectiveName,
+                                event.channelLeft?.name,
                                 event.member.asMention,
                                 event.channelLeft?.asMention,
                             ),
