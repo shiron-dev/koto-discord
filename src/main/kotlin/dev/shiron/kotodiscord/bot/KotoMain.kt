@@ -20,29 +20,35 @@ import java.util.*
 class KotoMain
     @Autowired
     constructor(
-        private val appProperties: AppProperties,
+        appProperties: AppProperties,
         private val notificationProperties: NotificationProperties,
         private val developProperties: DevelopProperties,
         private val commandController: CommandController,
         private val listeners: List<ListenerAdapter>,
         private val messages: MessageSource,
     ) {
-        val jda: JDA by lazy {
-            JDABuilder.createDefault(
-                appProperties.token,
-                GatewayIntent.GUILD_MEMBERS,
-                GatewayIntent.GUILD_MESSAGES,
-                GatewayIntent.GUILD_VOICE_STATES,
-                GatewayIntent.MESSAGE_CONTENT,
-            )
-                .setRawEventsEnabled(true)
-                .setActivity(
-                    Activity.playing(
-                        appProperties.activityMessage ?: "Koto Discord Bot",
-                    ),
+        companion object {
+            lateinit var jda: JDA
+                private set
+        }
+
+        init {
+            jda =
+                JDABuilder.createDefault(
+                    appProperties.token,
+                    GatewayIntent.GUILD_MEMBERS,
+                    GatewayIntent.GUILD_MESSAGES,
+                    GatewayIntent.GUILD_VOICE_STATES,
+                    GatewayIntent.MESSAGE_CONTENT,
                 )
-                .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .build()
+                    .setRawEventsEnabled(true)
+                    .setActivity(
+                        Activity.playing(
+                            appProperties.activityMessage ?: "Koto Discord Bot",
+                        ),
+                    )
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
+                    .build()
         }
 
         fun start(): Boolean {
