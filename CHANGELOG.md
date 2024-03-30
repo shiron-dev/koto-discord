@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.0](https://github.com/shiron-dev/koto-discord/compare/v1.1.0...v1.2.0) (2024-03-30)
+
+
+### Features
+
+* add bump command ([2f27ed1](https://github.com/shiron-dev/koto-discord/commit/2f27ed1c63e28c738a34341d6a0af4a8a370944a))
+* add onButton func ([1862d30](https://github.com/shiron-dev/koto-discord/commit/1862d306d99830a39c2820ed553170ced7bad5f5))
+* add onEntitySelect func ([e191fba](https://github.com/shiron-dev/koto-discord/commit/e191fbaacab68c614d967c6f187125de2f7c8854))
+* **deps:** add spring-boot-starter-actuator ([d1a4acb](https://github.com/shiron-dev/koto-discord/commit/d1a4acb8dd3b246d6e70de64bcd08fe9ba244812))
+* Impl bump command ([8c23155](https://github.com/shiron-dev/koto-discord/commit/8c23155bf0b363a94c9f446713e8cea009ee9cde))
+
+
+### Bug Fixes
+
+* action error message ([3b4ba23](https://github.com/shiron-dev/koto-discord/commit/3b4ba2370252a8ab144173204d460f53129f261b))
+* update vc notify message ([afe86e6](https://github.com/shiron-dev/koto-discord/commit/afe86e69e3dd29c1b9dcad02a9d50b71a1929ee4))
+
 ## [1.1.0](https://github.com/shiron-dev/koto-discord/compare/v1.0.1...v1.1.0) (2024-03-28)
 
 
