@@ -2,6 +2,7 @@ package dev.shiron.kotodiscord.util
 
 import dev.shiron.kotodiscord.util.data.BotActionData
 import dev.shiron.kotodiscord.util.data.ComponentIdData
+import dev.shiron.kotodiscord.util.data.ComponentReplayType
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import org.springframework.context.MessageSource
@@ -23,7 +24,10 @@ abstract class SubCommandServiceClass(
             ).addOptions(commandOptions)
                 .addOptions(sharedOptionData)
 
-    override fun getComponentId(key: String): String {
+    override fun getComponentId(
+        key: String,
+        componentReplayType: ComponentReplayType,
+    ): String {
         return ActionDataManager.newActionData(
             BotActionData(
                 isShow = true,
@@ -33,6 +37,7 @@ abstract class SubCommandServiceClass(
                         "${commandMeta.group.metadata.commandName}.${commandMeta.metadata.commandName}",
                         null,
                     ),
+                componentReplayType = componentReplayType,
             ),
         )
     }

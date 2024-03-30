@@ -5,6 +5,7 @@ import dev.shiron.kotodiscord.metrics.MetricsClass
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
+import net.dv8tion.jda.api.interactions.components.ItemComponent
 import java.util.function.Consumer
 
 data class BotStringSelectData(
@@ -17,10 +18,17 @@ data class BotStringSelectData(
 ) {
     fun reply(
         message: String,
+        actionComponents: List<ItemComponent>? = null,
         success: Consumer<in Message>? = null,
     ) {
         historyData.response = message
-        event.hook.sendMessage(message).queue(success)
+        var msgObj = event.hook.sendMessage(message)
+
+        if (actionComponents != null) {
+            msgObj = msgObj.addActionRow(actionComponents)
+        }
+
+        msgObj.queue(success)
         metrics.commandRun(historyData)
     }
 }

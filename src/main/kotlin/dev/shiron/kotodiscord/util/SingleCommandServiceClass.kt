@@ -2,6 +2,7 @@ package dev.shiron.kotodiscord.util
 
 import dev.shiron.kotodiscord.util.data.BotActionData
 import dev.shiron.kotodiscord.util.data.ComponentIdData
+import dev.shiron.kotodiscord.util.data.ComponentReplayType
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
@@ -24,7 +25,10 @@ abstract class SingleCommandServiceClass(val commandMeta: SingleCommandEnum, pri
             ).addOptions(commandOptions)
                 .addOptions(sharedOptionData)
 
-    override fun getComponentId(key: String): String {
+    override fun getComponentId(
+        key: String,
+        componentReplayType: ComponentReplayType,
+    ): String {
         return ActionDataManager.newActionData(
             BotActionData(
                 isShow = true,
@@ -34,6 +38,7 @@ abstract class SingleCommandServiceClass(val commandMeta: SingleCommandEnum, pri
                         runMeta.commandName,
                         null,
                     ),
+                componentReplayType = componentReplayType,
             ),
         )
     }

@@ -2,10 +2,17 @@ package dev.shiron.kotodiscord.util.data
 
 import java.util.Date
 
+enum class ComponentReplayType {
+    REPLAY,
+    EDIT,
+    DEFER,
+}
+
 data class BotActionData(
     val isShow: Boolean,
     val key: String,
     val componentIdData: ComponentIdData,
+    val componentReplayType: ComponentReplayType,
 ) {
     val createAt: Date = Date()
 }
