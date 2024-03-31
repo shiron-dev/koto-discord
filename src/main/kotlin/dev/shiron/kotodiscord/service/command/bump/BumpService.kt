@@ -20,7 +20,7 @@ class BumpService
         override fun onMessageReceived(event: MessageReceivedEvent) {
             if (event.author.isBot && event.author.idLong == BumpVars.DISBOARD_USER_ID) {
                 val msg = event.message.embeds.first().description.toString()
-                if (msg in BumpVars.BUMP_OK_MESSAGE) {
+                if (msg.trim().startsWith(BumpVars.BUMP_OK_MESSAGE)) {
                     val config = configRepository.findByGuildId(event.guild.idLong) ?: return
                     val job = jobQueueRepository.findByBumpConfig(config)
 
