@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/shiron-dev/koto-discord/compare/v1.2.0...v1.2.1) (2024-03-31)
+
+
+### Bug Fixes
+
+* bump command ([358672d](https://github.com/shiron-dev/koto-discord/commit/358672d4ff782d62e715dcd7756b16bdf662c454))
+
 ## [1.2.0](https://github.com/shiron-dev/koto-discord/compare/v1.1.0...v1.2.0) (2024-03-30)
 
 
