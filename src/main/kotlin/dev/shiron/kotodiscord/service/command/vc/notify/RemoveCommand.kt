@@ -1,4 +1,4 @@
-package dev.shiron.kotodiscord.service.command.vc
+package dev.shiron.kotodiscord.service.command.vc.notify
 
 import dev.shiron.kotodiscord.util.SubCommandServiceClass
 import dev.shiron.kotodiscord.util.data.BotSlashCommandData

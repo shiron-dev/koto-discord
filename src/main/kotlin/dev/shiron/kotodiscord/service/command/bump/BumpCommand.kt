@@ -235,14 +235,18 @@ class BumpCommand
                 val config = job.bumpConfig
                 val mention = config.mentionId?.let { "<@$it> " } ?: ""
 
-                KotoMain.jda.getGuildById(config.guildId)?.getTextChannelById(config.channelId)?.sendMessage(
-                    mention +
-                        messages.getMessage(
-                            "service.message.bump",
-                            arrayOf(BumpVars.BUMP_COMMAND_MENTION),
-                            Locale.JAPAN,
-                        ),
-                )?.queue()
+                try {
+                    KotoMain.jda.getGuildById(config.guildId)?.getTextChannelById(config.channelId)?.sendMessage(
+                        mention +
+                            messages.getMessage(
+                                "service.message.bump",
+                                arrayOf(BumpVars.BUMP_COMMAND_MENTION),
+                                Locale.JAPAN,
+                            ),
+                    )?.queue()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
 
                 jobQueueRepository.delete(job)
             }
