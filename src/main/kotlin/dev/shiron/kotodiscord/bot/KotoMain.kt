@@ -1,8 +1,8 @@
 package dev.shiron.kotodiscord.bot
 
-import dev.shiron.kotodiscord.AppProperties
-import dev.shiron.kotodiscord.DevelopProperties
-import dev.shiron.kotodiscord.NotificationProperties
+import dev.shiron.kotodiscord.vars.properties.AppProperties
+import dev.shiron.kotodiscord.vars.properties.DevelopProperties
+import dev.shiron.kotodiscord.vars.properties.NotificationProperties
 import dev.shiron.kotodiscord.controller.CommandController
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder

@@ -1,4 +1,4 @@
-package dev.shiron.kotodiscord
+package dev.shiron.kotodiscord.vars.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

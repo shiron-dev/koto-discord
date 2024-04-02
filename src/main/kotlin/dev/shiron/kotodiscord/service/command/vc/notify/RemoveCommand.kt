@@ -1,6 +1,6 @@
 package dev.shiron.kotodiscord.service.command.vc.notify
 
-import dev.shiron.kotodiscord.util.SubCommandServiceClass
+import dev.shiron.kotodiscord.util.service.SubCommandServiceClass
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.data.action.BotStringSelectData
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum

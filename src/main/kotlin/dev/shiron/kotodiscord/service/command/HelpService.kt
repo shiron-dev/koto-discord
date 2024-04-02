@@ -1,7 +1,7 @@
 package dev.shiron.kotodiscord.service.command
 
-import dev.shiron.kotodiscord.AppProperties
-import dev.shiron.kotodiscord.util.SingleCommandServiceClass
+import dev.shiron.kotodiscord.vars.properties.AppProperties
+import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum

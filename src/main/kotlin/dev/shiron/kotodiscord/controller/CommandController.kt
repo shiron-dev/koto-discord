@@ -1,12 +1,12 @@
 package dev.shiron.kotodiscord.controller
 
-import dev.shiron.kotodiscord.AppProperties
+import dev.shiron.kotodiscord.vars.properties.AppProperties
 import dev.shiron.kotodiscord.metrics.CommandHistory
 import dev.shiron.kotodiscord.metrics.MetricsClass
-import dev.shiron.kotodiscord.util.ActionDataManager
-import dev.shiron.kotodiscord.util.RunnableCommandServiceClass
-import dev.shiron.kotodiscord.util.SingleCommandServiceClass
-import dev.shiron.kotodiscord.util.SubCommandServiceClass
+import dev.shiron.kotodiscord.util.data.action.ActionDataManager
+import dev.shiron.kotodiscord.util.service.RunnableCommandServiceClass
+import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
+import dev.shiron.kotodiscord.util.service.SubCommandServiceClass
 import dev.shiron.kotodiscord.util.data.action.*
 import dev.shiron.kotodiscord.util.meta.SubCommandGroupEnum
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent

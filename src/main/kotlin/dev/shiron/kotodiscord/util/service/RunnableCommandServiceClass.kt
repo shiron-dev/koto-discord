@@ -1,4 +1,4 @@
-package dev.shiron.kotodiscord.util
+package dev.shiron.kotodiscord.util.service
 
 import dev.shiron.kotodiscord.util.data.action.*
 import dev.shiron.kotodiscord.util.meta.RunnableCommandMeta

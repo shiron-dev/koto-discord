@@ -5,7 +5,7 @@ import dev.shiron.kotodiscord.domain.BumpConfigData
 import dev.shiron.kotodiscord.domain.BumpJobQueueData
 import dev.shiron.kotodiscord.repository.BumpConfigDataRepository
 import dev.shiron.kotodiscord.repository.BumpJobQueueDataRepository
-import dev.shiron.kotodiscord.util.SingleCommandServiceClass
+import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import dev.shiron.kotodiscord.util.data.action.BotButtonData
 import dev.shiron.kotodiscord.util.data.action.BotEntitySelectData
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
