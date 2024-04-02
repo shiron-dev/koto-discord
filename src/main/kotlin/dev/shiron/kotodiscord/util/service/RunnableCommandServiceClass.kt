@@ -29,6 +29,26 @@ abstract class RunnableCommandServiceClass(
         )
     }
 
+    abstract val commandName: String
+
+    fun getComponentId(
+        key: String,
+        componentReplayType: ComponentReplayType = ComponentReplayType.REPLAY,
+    ): String {
+        return ActionDataManager.newActionData(
+            BotActionData(
+                isShow = true,
+                key = key,
+                componentIdData =
+                ComponentIdData(
+                    commandName,
+                    null,
+                ),
+                componentReplayType = componentReplayType,
+            ),
+        )
+    }
+
     abstract fun onSlashCommand(cmd: BotSlashCommandData)
 
     open fun onAutoComplete(event: CommandAutoCompleteInteractionEvent) {}
@@ -39,8 +59,4 @@ abstract class RunnableCommandServiceClass(
 
     open fun onEntitySelect(event: BotEntitySelectData) {}
 
-    abstract fun getComponentId(
-        key: String,
-        componentReplayType: ComponentReplayType = ComponentReplayType.REPLAY,
-    ): String
 }

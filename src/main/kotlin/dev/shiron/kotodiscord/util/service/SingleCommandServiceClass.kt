@@ -1,9 +1,5 @@
 package dev.shiron.kotodiscord.util.service
 
-import dev.shiron.kotodiscord.util.data.action.ActionDataManager
-import dev.shiron.kotodiscord.util.data.action.BotActionData
-import dev.shiron.kotodiscord.util.data.action.ComponentIdData
-import dev.shiron.kotodiscord.util.data.action.ComponentReplayType
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
@@ -19,28 +15,13 @@ abstract class SingleCommandServiceClass(val commandMeta: SingleCommandEnum, pri
             Commands.slash(
                 runMeta.commandName,
                 messages.getMessage(
-                    "command.description.${runMeta.commandName}",
+                    "command.description.$commandName",
                     arrayOf(),
                     Locale.JAPAN,
                 ),
             ).addOptions(commandOptions)
                 .addOptions(sharedOptionData)
 
-    override fun getComponentId(
-        key: String,
-        componentReplayType: ComponentReplayType,
-    ): String {
-        return ActionDataManager.newActionData(
-            BotActionData(
-                isShow = true,
-                key = key,
-                componentIdData =
-                    ComponentIdData(
-                        runMeta.commandName,
-                        null,
-                    ),
-                componentReplayType = componentReplayType,
-            ),
-        )
-    }
+    override val commandName: String
+        get() = commandMeta.metadata.commandName
 }

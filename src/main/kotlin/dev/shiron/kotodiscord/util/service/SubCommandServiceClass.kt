@@ -1,9 +1,5 @@
 package dev.shiron.kotodiscord.util.service
 
-import dev.shiron.kotodiscord.util.data.action.ActionDataManager
-import dev.shiron.kotodiscord.util.data.action.BotActionData
-import dev.shiron.kotodiscord.util.data.action.ComponentIdData
-import dev.shiron.kotodiscord.util.data.action.ComponentReplayType
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import org.springframework.context.MessageSource
@@ -18,28 +14,14 @@ abstract class SubCommandServiceClass(
             SubcommandData(
                 commandMeta.metadata.commandName,
                 messages.getMessage(
-                    "command.description.${commandMeta.group.metadata.commandName}.${commandMeta.metadata.commandName}",
+                    "command.description.$commandName",
                     arrayOf(),
                     Locale.JAPAN,
                 ),
             ).addOptions(commandOptions)
                 .addOptions(sharedOptionData)
 
-    override fun getComponentId(
-        key: String,
-        componentReplayType: ComponentReplayType,
-    ): String {
-        return ActionDataManager.newActionData(
-            BotActionData(
-                isShow = true,
-                key = key,
-                componentIdData =
-                    ComponentIdData(
-                        "${commandMeta.group.metadata.commandName}.${commandMeta.metadata.commandName}",
-                        null,
-                    ),
-                componentReplayType = componentReplayType,
-            ),
-        )
-    }
+    override val commandName: String
+        get() = "${commandMeta.group.metadata.commandName}.${commandMeta.metadata.commandName}"
+
 }
