@@ -1,8 +1,8 @@
 package dev.shiron.kotodiscord.service.command.vc.notify
 
 import dev.shiron.kotodiscord.util.SubCommandServiceClass
-import dev.shiron.kotodiscord.util.data.BotSlashCommandData
-import dev.shiron.kotodiscord.util.data.BotStringSelectData
+import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
+import dev.shiron.kotodiscord.util.data.action.BotStringSelectData
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu
 import org.springframework.beans.factory.annotation.Autowired

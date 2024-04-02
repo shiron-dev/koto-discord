@@ -1,8 +1,8 @@
 package dev.shiron.kotodiscord.util
 
-import dev.shiron.kotodiscord.util.data.BotActionData
-import dev.shiron.kotodiscord.util.data.ComponentIdData
-import dev.shiron.kotodiscord.util.data.ComponentReplayType
+import dev.shiron.kotodiscord.util.data.action.BotActionData
+import dev.shiron.kotodiscord.util.data.action.ComponentIdData
+import dev.shiron.kotodiscord.util.data.action.ComponentReplayType
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData

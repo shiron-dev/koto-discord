@@ -2,7 +2,7 @@ package dev.shiron.kotodiscord.service.command
 
 import dev.shiron.kotodiscord.AppProperties
 import dev.shiron.kotodiscord.util.SingleCommandServiceClass
-import dev.shiron.kotodiscord.util.data.BotSlashCommandData
+import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent

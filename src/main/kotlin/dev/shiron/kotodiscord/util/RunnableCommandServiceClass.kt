@@ -1,6 +1,6 @@
 package dev.shiron.kotodiscord.util
 
-import dev.shiron.kotodiscord.util.data.*
+import dev.shiron.kotodiscord.util.data.action.*
 import dev.shiron.kotodiscord.util.meta.RunnableCommandMeta
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType

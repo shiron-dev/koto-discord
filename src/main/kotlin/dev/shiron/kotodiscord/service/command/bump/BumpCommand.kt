@@ -6,10 +6,10 @@ import dev.shiron.kotodiscord.domain.BumpJobQueueData
 import dev.shiron.kotodiscord.repository.BumpConfigDataRepository
 import dev.shiron.kotodiscord.repository.BumpJobQueueDataRepository
 import dev.shiron.kotodiscord.util.SingleCommandServiceClass
-import dev.shiron.kotodiscord.util.data.BotButtonData
-import dev.shiron.kotodiscord.util.data.BotEntitySelectData
-import dev.shiron.kotodiscord.util.data.BotSlashCommandData
-import dev.shiron.kotodiscord.util.data.ComponentReplayType
+import dev.shiron.kotodiscord.util.data.action.BotButtonData
+import dev.shiron.kotodiscord.util.data.action.BotEntitySelectData
+import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
+import dev.shiron.kotodiscord.util.data.action.ComponentReplayType
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import dev.shiron.kotodiscord.vars.BumpVars
 import net.dv8tion.jda.api.interactions.components.buttons.Button

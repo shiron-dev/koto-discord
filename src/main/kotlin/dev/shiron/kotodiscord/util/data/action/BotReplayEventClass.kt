@@ -1,19 +1,16 @@
-package dev.shiron.kotodiscord.util.data
+package dev.shiron.kotodiscord.util.data.action
 
 import dev.shiron.kotodiscord.metrics.CommandHistory
 import dev.shiron.kotodiscord.metrics.MetricsClass
-import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
+import net.dv8tion.jda.api.interactions.callbacks.IDeferrableCallback
 import net.dv8tion.jda.api.interactions.components.ItemComponent
 import java.util.function.Consumer
 
-data class BotButtonData(
-    val event: ButtonInteractionEvent,
-    val guild: Guild,
-    val actionData: BotActionData,
-    val historyData: CommandHistory,
-    val metrics: MetricsClass,
+abstract class BotReplayEventClass (
+    private val interactionEvent: IDeferrableCallback,
+    private val historyData: CommandHistory,
+    private val metrics: MetricsClass,
 ) {
     fun reply(
         message: String,
@@ -21,7 +18,7 @@ data class BotButtonData(
         success: Consumer<in Message>? = null,
     ) {
         historyData.response = message
-        var msgObj = event.hook.sendMessage(message)
+        var msgObj = interactionEvent.hook.sendMessage(message)
 
         if (actionComponents != null) {
             msgObj = msgObj.addActionRow(actionComponents)
@@ -37,7 +34,7 @@ data class BotButtonData(
         success: Consumer<in Message>? = null,
     ) {
         historyData.response = message
-        var msgObj = event.hook.editOriginal(message)
+        var msgObj = interactionEvent.hook.editOriginal(message)
 
         if (actionComponents == null) {
             msgObj = msgObj.setComponents()
