@@ -1,12 +1,12 @@
 package dev.shiron.kotodiscord.service.command.vc.notify
 
 import dev.shiron.kotodiscord.domain.VCNotificationData
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.repository.VCNotificationDataRepository
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,7 +16,7 @@ class VCService
     @Autowired
     constructor(
         private val vcRepository: VCNotificationDataRepository,
-        private val messages: MessageSource,
+        private val i18n: I18n,
     ) : ListenerAdapter() {
         fun setVCNotification(data: VCNotificationData): VCNotificationData {
             return vcRepository.save(data)
@@ -80,47 +80,38 @@ class VCService
                 if (textData.isJoin && textData.isLeft) {
                     eb.setTitle("Change")
                     eb.setDescription(
-                        messages.getMessage(
+                        i18n.format(
                             "service.message.vc_notification.change",
-                            arrayOf(
-                                event.guild.name,
-                                event.member.effectiveName,
-                                event.channelJoined?.name,
-                                event.member.asMention,
-                                event.channelLeft?.asMention,
-                                event.channelJoined?.asMention,
-                            ),
-                            Locale.JAPAN,
+                            event.guild.name,
+                            event.member.effectiveName,
+                            event.channelJoined?.name ?: "",
+                            event.member.asMention,
+                            event.channelLeft?.asMention ?: "",
+                            event.channelJoined?.asMention ?: "",
                         ),
                     )
                 } else if (textData.isJoin) {
                     eb.setTitle("Join")
                     eb.setDescription(
-                        messages.getMessage(
+                        i18n.format(
                             "service.message.vc_notification.join",
-                            arrayOf(
-                                event.guild.name,
-                                event.member.effectiveName,
-                                event.channelJoined?.name,
-                                event.member.asMention,
-                                event.channelJoined?.asMention,
-                            ),
-                            Locale.JAPAN,
+                            event.guild.name,
+                            event.member.effectiveName,
+                            event.channelJoined?.name ?: "",
+                            event.member.asMention,
+                            event.channelJoined?.asMention ?: "",
                         ),
                     )
                 } else if (textData.isLeft) {
                     eb.setTitle("Left")
                     eb.setDescription(
-                        messages.getMessage(
+                        i18n.format(
                             "service.message.vc_notification.left",
-                            arrayOf(
-                                event.guild.name,
-                                event.member.effectiveName,
-                                event.channelLeft?.name,
-                                event.member.asMention,
-                                event.channelLeft?.asMention,
-                            ),
-                            Locale.JAPAN,
+                            event.guild.name,
+                            event.member.effectiveName,
+                            event.channelLeft?.name ?: "",
+                            event.member.asMention,
+                            event.channelLeft?.asMention ?: "",
                         ),
                     )
                 }

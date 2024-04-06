@@ -1,16 +1,15 @@
 package dev.shiron.kotodiscord.util.service
 
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.util.data.action.*
 import dev.shiron.kotodiscord.util.meta.RunnableCommandMeta
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
-import org.springframework.context.MessageSource
-import java.util.*
 
 abstract class RunnableCommandServiceClass(
     val runMeta: RunnableCommandMeta,
-    private val messages: MessageSource,
+    private val i18n: I18n,
     val sharedDefault: Boolean = false,
 ) : BotServiceClass(
         runMeta,
@@ -21,10 +20,9 @@ abstract class RunnableCommandServiceClass(
         OptionData(
             OptionType.BOOLEAN,
             "shared",
-            messages.getMessage(
+            i18n.format(
                 "command.option.share",
-                arrayOf(if (sharedDefault) "true(見える)" else "false(見えない)"),
-                Locale.JAPAN,
+                if (sharedDefault) "true(見える)" else "false(見えない)",
             ),
         )
     }

@@ -1,6 +1,7 @@
 package dev.shiron.kotodiscord.service.command.vc.notify
 
 import dev.shiron.kotodiscord.domain.VCNotificationData
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum
 import dev.shiron.kotodiscord.util.service.SubCommandServiceClass
@@ -8,19 +9,17 @@ import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class SetCommand
     @Autowired
     constructor(
         private val vcService: VCService,
-        private val messages: MessageSource,
+        private val i18n: I18n,
     ) : SubCommandServiceClass(
             SubCommandEnum.VC_NOTIFICATION_SET,
-            messages,
+            i18n,
         ) {
         override val commandOptions: List<OptionData>
             get() =
@@ -28,68 +27,36 @@ class SetCommand
                     OptionData(
                         OptionType.CHANNEL,
                         "text",
-                        messages.getMessage(
-                            "command.option.vc_notification.set.text",
-                            arrayOf(),
-                            Locale.JAPAN,
-                        ),
+                        i18n.format("command.option.vc_notification.set.text"),
                         true,
                     ),
                     OptionData(
                         OptionType.CHANNEL,
                         "vc",
-                        messages.getMessage(
-                            "command.option.vc_notification.set.vc",
-                            arrayOf(),
-                            Locale.JAPAN,
-                        ),
+                        i18n.format("command.option.vc_notification.set.vc"),
                     ),
                 )
 
         override fun onSlashCommand(cmd: BotSlashCommandData) {
             val dataList = vcService.listVCNotification(cmd.guild.idLong)
             if (dataList.size >= 10) {
-                cmd.reply(
-                    messages.getMessage(
-                        "command.message.vc_notification.set.limit",
-                        arrayOf(),
-                        Locale.JAPAN,
-                    ),
-                )
+                cmd.reply(i18n.format("command.message.vc_notification.set.limit"))
                 return
             }
 
             val vc = cmd.event.getOption("vc")?.asChannel
             val text = cmd.event.getOption("text")?.asChannel
             if (text == null) {
-                cmd.reply(
-                    messages.getMessage(
-                        "command.error.internal",
-                        arrayOf(),
-                        Locale.JAPAN,
-                    ),
-                )
+                cmd.reply(i18n.format("command.error.internal"))
                 return
             }
 
             if (vc?.type != ChannelType.VOICE && vc?.type != ChannelType.STAGE && vc?.type != ChannelType.CATEGORY && vc != null) {
-                cmd.reply(
-                    messages.getMessage(
-                        "command.message.vc_notification.set.vc",
-                        arrayOf(),
-                        Locale.JAPAN,
-                    ),
-                )
+                cmd.reply(i18n.format("command.message.vc_notification.set.vc"))
                 return
             }
             if (text.type != ChannelType.TEXT && text.type != ChannelType.NEWS && text.type != ChannelType.FORUM) {
-                cmd.reply(
-                    messages.getMessage(
-                        "command.message.vc_notification.set.text",
-                        arrayOf(),
-                        Locale.JAPAN,
-                    ),
-                )
+                cmd.reply(i18n.format("command.message.vc_notification.set.text"))
                 return
             }
 
@@ -102,23 +69,17 @@ class SetCommand
                 )
             for (data in dataList) {
                 if (data.like(register)) {
-                    cmd.reply(
-                        messages.getMessage(
-                            "command.message.vc_notification.set.already",
-                            arrayOf(),
-                            Locale.JAPAN,
-                        ),
-                    )
+                    cmd.reply(i18n.format("command.message.vc_notification.set.already"))
                     return
                 }
             }
 
             vcService.setVCNotification(register)
             cmd.reply(
-                messages.getMessage(
+                i18n.format(
                     "command.message.vc_notification.set.success",
-                    arrayOf(vc?.asMention ?: "サーバー全体", text.asMention),
-                    Locale.JAPAN,
+                    vc?.asMention ?: "サーバー全体",
+                    text.asMention,
                 ),
             )
         }

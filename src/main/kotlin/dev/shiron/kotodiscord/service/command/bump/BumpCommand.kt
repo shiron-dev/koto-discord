@@ -3,6 +3,7 @@ package dev.shiron.kotodiscord.service.command.bump
 import dev.shiron.kotodiscord.bot.KotoMain
 import dev.shiron.kotodiscord.domain.BumpConfigData
 import dev.shiron.kotodiscord.domain.BumpJobQueueData
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.repository.BumpConfigDataRepository
 import dev.shiron.kotodiscord.repository.BumpJobQueueDataRepository
 import dev.shiron.kotodiscord.util.data.action.BotButtonData
@@ -15,12 +16,10 @@ import dev.shiron.kotodiscord.vars.BumpVars
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.selections.EntitySelectMenu
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
 
 @Service
 class BumpCommand
@@ -28,52 +27,36 @@ class BumpCommand
     constructor(
         private val configRepository: BumpConfigDataRepository,
         private val jobQueueRepository: BumpJobQueueDataRepository,
-        private val messages: MessageSource,
+        private val i18n: I18n,
     ) : SingleCommandServiceClass(
             SingleCommandEnum.BUMP,
-            messages,
+            i18n,
         ) {
         fun genBtnSet(shared: Boolean): Button {
             return Button.secondary(
                 genComponentId("set", shared, ComponentReplayType.EDIT),
-                messages.getMessage(
-                    "button.bump.set",
-                    null,
-                    Locale.JAPAN,
-                ),
+                i18n.format("button.bump.set"),
             )
         }
 
         fun genBtnUnset(shared: Boolean): Button {
             return Button.secondary(
                 genComponentId("unset", shared, ComponentReplayType.EDIT),
-                messages.getMessage(
-                    "button.bump.unset",
-                    null,
-                    Locale.JAPAN,
-                ),
+                i18n.format("button.bump.unset"),
             )
         }
 
         fun genBtnSetMention(shared: Boolean): Button {
             return Button.secondary(
                 genComponentId("set_mention", shared, ComponentReplayType.EDIT),
-                messages.getMessage(
-                    "button.bump.set_mention",
-                    null,
-                    Locale.JAPAN,
-                ),
+                i18n.format("button.bump.set_mention"),
             )
         }
 
         fun genBtnUnsetMention(shared: Boolean): Button {
             return Button.secondary(
                 genComponentId("unset_mention", shared, ComponentReplayType.EDIT),
-                messages.getMessage(
-                    "button.bump.unset_mention",
-                    null,
-                    Locale.JAPAN,
-                ),
+                i18n.format("button.bump.unset_mention"),
             )
         }
 
@@ -82,11 +65,7 @@ class BumpCommand
 
             if (config == null) {
                 cmd.reply(
-                    messages.getMessage(
-                        "command.message.bump.none",
-                        null,
-                        Locale.JAPAN,
-                    ),
+                    i18n.format("command.message.bump.none"),
                     listOf(
                         genBtnSet(cmd.shared),
                     ),
@@ -102,24 +81,18 @@ class BumpCommand
                     )
 
                 cmd.reply(
-                    messages.getMessage(
+                    i18n.format(
                         "command.message.bump.msg",
-                        arrayOf(
-                            "<#${config.channelId}>",
-                            config.mentionId?.let { " (<@$it>)" } ?: "",
-                            if (LocalDateTime.now().isAfter(job.execAt)) {
-                                messages.getMessage("command.message.bump.after", arrayOf(BumpVars.BUMP_COMMAND_MENTION), Locale.JAPAN)
-                            } else {
-                                messages.getMessage(
-                                    "command.message.bump.before",
-                                    arrayOf(
-                                        job.execAt.until(LocalDateTime.now(), ChronoUnit.MINUTES) + 1,
-                                    ),
-                                    Locale.JAPAN,
-                                )
-                            },
-                        ),
-                        Locale.JAPAN,
+                        "<#${config.channelId}>",
+                        config.mentionId?.let { " (<@$it>)" } ?: "",
+                        if (LocalDateTime.now().isAfter(job.execAt)) {
+                            i18n.format("command.message.bump.after", BumpVars.BUMP_COMMAND_MENTION)
+                        } else {
+                            i18n.format(
+                                "command.message.bump.before",
+                                (LocalDateTime.now().until(job.execAt, ChronoUnit.MINUTES) + 1).toString(),
+                            )
+                        },
                     ),
                     listOfNotNull(
                         if (cmd.event.channelIdLong != config.channelId) genBtnSet(cmd.shared) else null,
@@ -156,10 +129,9 @@ class BumpCommand
                     ),
                 )
                 event.edit(
-                    messages.getMessage(
+                    i18n.format(
                         "command.message.bump.seted",
-                        arrayOf(event.event.channel.asMention),
-                        Locale.JAPAN,
+                        event.event.channel.asMention,
                     ),
                     listOf(
                         genBtnUnset(event.actionData.isShow),
@@ -171,11 +143,7 @@ class BumpCommand
 
             if (config == null) {
                 event.edit(
-                    messages.getMessage(
-                        "command.message.bump.none",
-                        null,
-                        Locale.JAPAN,
-                    ),
+                    i18n.format("command.message.bump.none"),
                     listOf(
                         genBtnSet(event.actionData.isShow),
                         genBtnSetMention(event.actionData.isShow),
@@ -187,13 +155,10 @@ class BumpCommand
             when (event.actionData.key) {
                 "unset" -> {
                     event.edit(
-                        messages.getMessage(
+                        i18n.format(
                             "command.message.bump.unseted",
-                            arrayOf(
-                                "<#${config.channelId}>",
-                                config.mentionId?.let { " (<@$it>)" } ?: "",
-                            ),
-                            Locale.JAPAN,
+                            "<#${config.channelId}>",
+                            config.mentionId?.let { " (<@$it>)" } ?: "",
                         ),
                     )
                     jobQueueRepository.deleteByBumpConfig(config)
@@ -201,18 +166,14 @@ class BumpCommand
                 }
                 "set_mention" ->
                     event.edit(
-                        messages.getMessage("command.message.bump.set_mention", null, Locale.JAPAN),
+                        i18n.format("command.message.bump.set_mention"),
                         listOf(
                             EntitySelectMenu.create(genComponentId("select_mention", event.actionData.isShow, ComponentReplayType.EDIT), EntitySelectMenu.SelectTarget.ROLE, EntitySelectMenu.SelectTarget.USER).build(),
                         ),
                     )
                 "unset_mention" -> {
                     event.edit(
-                        messages.getMessage(
-                            "command.message.bump.mention.unseted",
-                            null,
-                            Locale.JAPAN,
-                        ),
+                        i18n.format("command.message.bump.mention.unseted"),
                     )
                     configRepository.save(config.copy(mentionId = null))
                 }
@@ -226,10 +187,9 @@ class BumpCommand
                 val mentionId = event.values.first()
                 configRepository.save(config.copy(mentionId = mentionId.idLong))
                 event.edit(
-                    messages.getMessage(
+                    i18n.format(
                         "command.message.bump.mention.seted",
-                        arrayOf(mentionId.asMention),
-                        Locale.JAPAN,
+                        mentionId.asMention,
                     ),
                 )
             }
@@ -247,10 +207,9 @@ class BumpCommand
                 try {
                     KotoMain.jda.getGuildById(config.guildId)?.getTextChannelById(config.channelId)?.sendMessage(
                         mention +
-                            messages.getMessage(
+                            i18n.format(
                                 "service.message.bump",
-                                arrayOf(BumpVars.BUMP_COMMAND_MENTION),
-                                Locale.JAPAN,
+                                BumpVars.BUMP_COMMAND_MENTION,
                             ),
                     )?.queue()
                 } catch (e: Exception) {

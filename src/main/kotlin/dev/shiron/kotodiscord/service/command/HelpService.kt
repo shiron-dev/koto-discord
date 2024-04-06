@@ -1,5 +1,6 @@
 package dev.shiron.kotodiscord.service.command
 
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum
@@ -10,19 +11,17 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class HelpService
     @Autowired
     constructor(
         private val appProperties: AppProperties,
-        private val messages: MessageSource,
+        private val i18n: I18n,
     ) : SingleCommandServiceClass(
             SingleCommandEnum.HELP,
-            messages,
+            i18n,
         ) {
         val commands =
             SingleCommandEnum.values().map { it.metadata.commandName } +
@@ -34,11 +33,7 @@ class HelpService
                     OptionData(
                         OptionType.STRING,
                         "command",
-                        messages.getMessage(
-                            "command.option.command",
-                            arrayOf(),
-                            Locale.JAPAN,
-                        ),
+                        i18n.format("command.option.command"),
                     ).setAutoComplete(true),
                 )
 
@@ -65,7 +60,7 @@ class HelpService
                     .addActionRow(
                         Button.link(
                             appProperties.inviteLink ?: "",
-                            messages.getMessage("button.support", arrayOf(), Locale.JAPAN),
+                            i18n.format("button.support"),
                         ),
                     ).queue()
             }
@@ -75,11 +70,7 @@ class HelpService
                     reply("### $command\n${getHelp(command)}")
                 } else {
                     reply(
-                        messages.getMessage(
-                            "command.message.help.notfound",
-                            arrayOf(command),
-                            Locale.JAPAN,
-                        ),
+                        i18n.format("command.message.help.notfound", command),
                     )
                 }
             } else {
@@ -93,12 +84,6 @@ class HelpService
 
         private fun getHelp(command: String): String {
             val cmdStr = command.replace(" ", ".")
-            return messages.getMessage(
-                "command.help.$cmdStr",
-                arrayOf(),
-                null,
-                Locale.JAPAN,
-            )
-                ?: messages.getMessage("command.description.$cmdStr", arrayOf(), Locale.JAPAN)
+            return i18n.format("command.help.$cmdStr")
         }
     }

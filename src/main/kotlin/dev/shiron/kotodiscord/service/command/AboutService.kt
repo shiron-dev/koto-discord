@@ -1,5 +1,6 @@
 package dev.shiron.kotodiscord.service.command
 
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
@@ -7,7 +8,6 @@ import dev.shiron.kotodiscord.vars.properties.AppProperties
 import dev.shiron.kotodiscord.vars.properties.DevelopProperties
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,10 +19,10 @@ class AboutService
     constructor(
         private val appProperties: AppProperties,
         private val devProperties: DevelopProperties,
-        private val messages: MessageSource,
+        private val i18n: I18n,
     ) : SingleCommandServiceClass(
             SingleCommandEnum.ABOUT,
-            messages,
+            i18n,
         ) {
         private final var implementationVersion: String?
         val started = Date()
@@ -40,28 +40,23 @@ class AboutService
 
             val now = Date()
             val diff = now.time - started.time
-            val format = SimpleDateFormat("HHHH mm")
+            val format = SimpleDateFormat("MM:dd HH:mm")
             format.timeZone = TimeZone.getTimeZone("UTC")
             val formattedTime = format.format(Date(diff))
             cmd.event.hook.sendMessage(
-                messages.getMessage(
+                i18n.format(
                     "command.message.about",
-                    arrayOf(
-                        cmd.event.jda.selfUser.asMention,
-                        implementationVersion,
-                        cmd.event.jda.gatewayPing,
-                        "${fmt.format(started)} ($formattedTime)",
-                        if (devProperties.isDevMode) "\n:warning: 開発モード :warning:" else "",
-                    ),
-                    Locale.JAPAN,
+                    cmd.event.jda.selfUser.asMention,
+                    implementationVersion ?: "",
+                    cmd.event.jda.gatewayPing.toString(),
+                    "${fmt.format(started)} ($formattedTime)",
+                    if (devProperties.isDevMode) "\n:warning: 開発モード :warning:" else "",
                 ),
-            )
-                .addActionRow(
-                    Button.link(
-                        appProperties.inviteLink ?: "",
-                        messages.getMessage("button.support", arrayOf(), Locale.JAPAN),
-                    ),
-                )
-                .queue()
+            ).addActionRow(
+                Button.link(
+                    appProperties.inviteLink ?: "",
+                    i18n.format("button.support"),
+                ),
+            ).queue()
         }
     }
