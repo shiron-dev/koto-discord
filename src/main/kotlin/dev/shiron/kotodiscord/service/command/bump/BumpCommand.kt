@@ -225,8 +225,7 @@ class BumpCommand
             if (event.actionData.key == "select_mention") {
                 val mentionId = event.values.first()
                 configRepository.save(config.copy(mentionId = mentionId.idLong))
-                // TODO: Editに変更
-                event.reply(
+                event.edit(
                     messages.getMessage(
                         "command.message.bump.mention.seted",
                         arrayOf(mentionId.asMention),
