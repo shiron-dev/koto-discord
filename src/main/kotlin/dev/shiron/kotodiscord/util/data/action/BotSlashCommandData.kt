@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 data class BotSlashCommandData(
     val event: SlashCommandInteractionEvent,
     val guild: Guild,
+    val shared: Boolean,
     val historyData: CommandHistory,
     val metrics: MetricsClass,
 ) : BotReplayEventClass(event, historyData, metrics)

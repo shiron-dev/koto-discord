@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.callbacks.IDeferrableCallback
 import net.dv8tion.jda.api.interactions.components.ItemComponent
 import java.util.function.Consumer
 
-abstract class BotReplayEventClass (
+abstract class BotReplayEventClass(
     private val interactionEvent: IDeferrableCallback,
     private val historyData: CommandHistory,
     private val metrics: MetricsClass,

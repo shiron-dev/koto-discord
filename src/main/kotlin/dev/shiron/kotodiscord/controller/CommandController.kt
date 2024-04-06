@@ -1,14 +1,14 @@
 package dev.shiron.kotodiscord.controller
 
-import dev.shiron.kotodiscord.vars.properties.AppProperties
 import dev.shiron.kotodiscord.metrics.CommandHistory
 import dev.shiron.kotodiscord.metrics.MetricsClass
+import dev.shiron.kotodiscord.util.data.action.*
 import dev.shiron.kotodiscord.util.data.action.ActionDataManager
+import dev.shiron.kotodiscord.util.meta.SubCommandGroupEnum
 import dev.shiron.kotodiscord.util.service.RunnableCommandServiceClass
 import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import dev.shiron.kotodiscord.util.service.SubCommandServiceClass
-import dev.shiron.kotodiscord.util.data.action.*
-import dev.shiron.kotodiscord.util.meta.SubCommandGroupEnum
+import dev.shiron.kotodiscord.vars.properties.AppProperties
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
@@ -38,17 +38,18 @@ class CommandController
             val command = getCommand(event.name, event.subcommandName)
             val guild = event.guild
             if (command != null && guild != null) {
+                val shared =
+                    (event.getOption("shared")?.asBoolean?.not())
+                        ?: command.sharedDefault.not()
                 event
                     .deferReply()
-                    .setEphemeral(
-                        (event.getOption("shared")?.asBoolean?.not())
-                            ?: command.sharedDefault.not(),
-                    )
+                    .setEphemeral(shared)
                     .queue()
                 command.onSlashCommand(
                     BotSlashCommandData(
                         event = event,
                         guild = guild,
+                        shared = shared,
                         historyData =
                             CommandHistory(
                                 commandName = "${event.name}.${event.subcommandName}",

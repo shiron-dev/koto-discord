@@ -31,19 +31,20 @@ abstract class RunnableCommandServiceClass(
 
     abstract val commandName: String
 
-    fun getComponentId(
+    fun genComponentId(
         key: String,
-        componentReplayType: ComponentReplayType = ComponentReplayType.REPLAY,
+        shared: Boolean,
+        componentReplayType: ComponentReplayType,
     ): String {
         return ActionDataManager.newActionData(
             BotActionData(
-                isShow = true,
+                isShow = shared,
                 key = key,
                 componentIdData =
-                ComponentIdData(
-                    commandName,
-                    null,
-                ),
+                    ComponentIdData(
+                        commandName,
+                        null,
+                    ),
                 componentReplayType = componentReplayType,
             ),
         )
@@ -58,5 +59,4 @@ abstract class RunnableCommandServiceClass(
     open fun onStringSelect(event: BotStringSelectData) {}
 
     open fun onEntitySelect(event: BotEntitySelectData) {}
-
 }

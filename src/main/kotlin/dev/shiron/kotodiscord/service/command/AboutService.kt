@@ -1,10 +1,10 @@
 package dev.shiron.kotodiscord.service.command
 
-import dev.shiron.kotodiscord.vars.properties.AppProperties
-import dev.shiron.kotodiscord.vars.properties.DevelopProperties
-import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
+import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
+import dev.shiron.kotodiscord.vars.properties.AppProperties
+import dev.shiron.kotodiscord.vars.properties.DevelopProperties
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource

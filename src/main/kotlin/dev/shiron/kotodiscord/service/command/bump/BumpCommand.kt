@@ -5,12 +5,12 @@ import dev.shiron.kotodiscord.domain.BumpConfigData
 import dev.shiron.kotodiscord.domain.BumpJobQueueData
 import dev.shiron.kotodiscord.repository.BumpConfigDataRepository
 import dev.shiron.kotodiscord.repository.BumpJobQueueDataRepository
-import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import dev.shiron.kotodiscord.util.data.action.BotButtonData
 import dev.shiron.kotodiscord.util.data.action.BotEntitySelectData
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.data.action.ComponentReplayType
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
+import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import dev.shiron.kotodiscord.vars.BumpVars
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.selections.EntitySelectMenu
@@ -33,42 +33,49 @@ class BumpCommand
             SingleCommandEnum.BUMP,
             messages,
         ) {
-        val btnSet =
-            Button.secondary(
-                getComponentId("set", ComponentReplayType.EDIT),
+        fun genBtnSet(shared: Boolean): Button {
+            return Button.secondary(
+                genComponentId("set", shared, ComponentReplayType.EDIT),
                 messages.getMessage(
                     "button.bump.set",
                     null,
                     Locale.JAPAN,
                 ),
             )
-        val btnUnset =
-            Button.secondary(
-                getComponentId("unset", ComponentReplayType.EDIT),
+        }
+
+        fun genBtnUnset(shared: Boolean): Button {
+            return Button.secondary(
+                genComponentId("unset", shared, ComponentReplayType.EDIT),
                 messages.getMessage(
                     "button.bump.unset",
                     null,
                     Locale.JAPAN,
                 ),
             )
-        val btnSetMention =
-            Button.secondary(
-                getComponentId("set_mention", ComponentReplayType.EDIT),
+        }
+
+        fun genBtnSetMention(shared: Boolean): Button {
+            return Button.secondary(
+                genComponentId("set_mention", shared, ComponentReplayType.EDIT),
                 messages.getMessage(
                     "button.bump.set_mention",
                     null,
                     Locale.JAPAN,
                 ),
             )
-        val btnUnsetMention =
-            Button.secondary(
-                getComponentId("unset_mention", ComponentReplayType.EDIT),
+        }
+
+        fun genBtnUnsetMention(shared: Boolean): Button {
+            return Button.secondary(
+                genComponentId("unset_mention", shared, ComponentReplayType.EDIT),
                 messages.getMessage(
                     "button.bump.unset_mention",
                     null,
                     Locale.JAPAN,
                 ),
             )
+        }
 
         override fun onSlashCommand(cmd: BotSlashCommandData) {
             val config = configRepository.findByGuildId(cmd.guild.idLong)
@@ -81,7 +88,7 @@ class BumpCommand
                         Locale.JAPAN,
                     ),
                     listOf(
-                        btnSet,
+                        genBtnSet(cmd.shared),
                     ),
                 )
             } else {
@@ -115,11 +122,11 @@ class BumpCommand
                         Locale.JAPAN,
                     ),
                     listOfNotNull(
-                        btnSet,
-                        btnUnset,
-                        btnSetMention,
+                        genBtnSet(cmd.shared),
+                        genBtnUnset(cmd.shared),
+                        genBtnSetMention(cmd.shared),
                         config.mentionId?.let {
-                            btnUnsetMention
+                            genBtnUnsetMention(cmd.shared)
                         },
                     ),
                 )
@@ -150,8 +157,8 @@ class BumpCommand
                         Locale.JAPAN,
                     ),
                     listOf(
-                        btnUnset,
-                        btnSetMention,
+                        genBtnUnset(event.actionData.isShow),
+                        genBtnSetMention(event.actionData.isShow),
                     ),
                 )
                 return
@@ -167,8 +174,8 @@ class BumpCommand
                         Locale.JAPAN,
                     ),
                     listOf(
-                        btnSet,
-                        btnSetMention,
+                        genBtnSet(event.actionData.isShow),
+                        genBtnSetMention(event.actionData.isShow),
                     ),
                 )
                 return
@@ -193,7 +200,7 @@ class BumpCommand
                     event.edit(
                         messages.getMessage("command.message.bump.set_mention", null, Locale.JAPAN),
                         listOf(
-                            EntitySelectMenu.create(getComponentId("select_mention"), EntitySelectMenu.SelectTarget.ROLE, EntitySelectMenu.SelectTarget.USER).build(),
+                            EntitySelectMenu.create(genComponentId("select_mention", event.actionData.isShow, ComponentReplayType.EDIT), EntitySelectMenu.SelectTarget.ROLE, EntitySelectMenu.SelectTarget.USER).build(),
                         ),
                     )
                 "unset_mention" -> {

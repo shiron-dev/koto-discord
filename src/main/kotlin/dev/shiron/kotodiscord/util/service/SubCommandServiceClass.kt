@@ -23,5 +23,4 @@ abstract class SubCommandServiceClass(
 
     override val commandName: String
         get() = "${commandMeta.group.metadata.commandName}.${commandMeta.metadata.commandName}"
-
 }

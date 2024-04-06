@@ -1,9 +1,10 @@
 package dev.shiron.kotodiscord.service.command.vc.notify
 
-import dev.shiron.kotodiscord.util.service.SubCommandServiceClass
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.data.action.BotStringSelectData
+import dev.shiron.kotodiscord.util.data.action.ComponentReplayType
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum
+import dev.shiron.kotodiscord.util.service.SubCommandServiceClass
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
@@ -27,7 +28,7 @@ class RemoveCommand
                 return
             }
             val options =
-                StringSelectMenu.create(getComponentId("rm")).apply {
+                StringSelectMenu.create(genComponentId("rm", cmd.shared, ComponentReplayType.REPLAY)).apply {
                     vcData.forEachIndexed { index, vcNotificationData ->
                         val vcId = vcNotificationData.vcCategoryId ?: vcNotificationData.vcChannelId
                         val vcName = vcId.let { cmd.guild.channels.find { it.idLong == vcId }?.name }?.let { "#$it" } ?: "サーバー全体"
