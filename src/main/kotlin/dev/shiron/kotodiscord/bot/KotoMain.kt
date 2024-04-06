@@ -1,6 +1,7 @@
 package dev.shiron.kotodiscord.bot
 
 import dev.shiron.kotodiscord.controller.CommandController
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.vars.properties.AppProperties
 import dev.shiron.kotodiscord.vars.properties.DevelopProperties
 import dev.shiron.kotodiscord.vars.properties.NotificationProperties
@@ -12,7 +13,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.MemberCachePolicy
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -25,7 +25,7 @@ class KotoMain
         private val developProperties: DevelopProperties,
         private val commandController: CommandController,
         private val listeners: List<ListenerAdapter>,
-        private val messages: MessageSource,
+        private val i18n: I18n,
     ) {
         companion object {
             lateinit var jda: JDA
@@ -64,16 +64,13 @@ class KotoMain
                         guild.getTextChannelById(it)
                     }
                 channel?.sendMessage(
-                    messages.getMessage(
+                    i18n.format(
                         "notification.message.start",
-                        arrayOf(
-                            jda.selfUser.asMention,
-                            Date().toString(),
-                            Random(
-                                System.currentTimeMillis(),
-                            ).nextInt(100000, 1000000).toString(),
-                        ),
-                        Locale.JAPAN,
+                        jda.selfUser.asMention,
+                        Date().toString(),
+                        Random(
+                            System.currentTimeMillis(),
+                        ).nextInt(100000, 1000000).toString(),
                     ),
                 )?.queue()
             }

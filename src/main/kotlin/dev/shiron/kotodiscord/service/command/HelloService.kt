@@ -1,28 +1,26 @@
 package dev.shiron.kotodiscord.service.command
 
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class HelloService
     @Autowired
     constructor(
-        private val messages: MessageSource,
+        private val i18n: I18n,
     ) : SingleCommandServiceClass(
             SingleCommandEnum.HELLO,
-            messages,
+            i18n,
         ) {
         override fun onSlashCommand(cmd: BotSlashCommandData) {
             cmd.reply(
-                messages.getMessage(
+                i18n.format(
                     "command.message.hello",
-                    arrayOf(cmd.event.user.asMention),
-                    Locale.JAPAN,
+                    cmd.event.user.asMention,
                 ),
             )
         }

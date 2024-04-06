@@ -1,9 +1,9 @@
 package dev.shiron.kotodiscord.controller
 
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.metrics.CommandHistory
 import dev.shiron.kotodiscord.metrics.MetricsClass
 import dev.shiron.kotodiscord.util.data.action.*
-import dev.shiron.kotodiscord.util.data.action.ActionDataManager
 import dev.shiron.kotodiscord.util.meta.SubCommandGroupEnum
 import dev.shiron.kotodiscord.util.service.RunnableCommandServiceClass
 import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
@@ -18,11 +18,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Controller
 import java.time.LocalDateTime
-import java.util.*
 
 @Controller
 class CommandController
@@ -31,7 +29,7 @@ class CommandController
         private val singleCommandServices: List<SingleCommandServiceClass>,
         private val subCommandServices: List<SubCommandServiceClass>,
         private val appProperties: AppProperties,
-        private val messages: MessageSource,
+        private val i18n: I18n,
         private val metrics: MetricsClass,
     ) : ListenerAdapter() {
         override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
@@ -67,10 +65,9 @@ class CommandController
                 )
             } else {
                 event.reply(
-                    messages.getMessage(
+                    i18n.format(
                         "command.error.notfound",
-                        arrayOf(event.name),
-                        Locale.JAPAN,
+                        event.name,
                     ),
                 ).queue()
             }
@@ -85,12 +82,12 @@ class CommandController
             val guild = event.guild
             val actionData = ActionDataManager[event.componentId]
             if (actionData == null) {
-                event.reply(messages.getMessage("command.error.action", null, Locale.JAPAN)).setEphemeral(true).queue()
+                event.reply(i18n.format("command.error.action")).setEphemeral(true).queue()
                 return
             }
             val command = getCommandFromComponentId(actionData.componentIdData)
             if (guild == null || command == null) {
-                event.reply(messages.getMessage("command.error.internal", null, Locale.JAPAN)).queue()
+                event.reply(i18n.format("command.error.internal")).queue()
                 return
             }
 
@@ -129,12 +126,12 @@ class CommandController
             val guild = event.guild
             val actionData = ActionDataManager[event.componentId]
             if (actionData == null) {
-                event.reply(messages.getMessage("command.error.action", arrayOf(), Locale.JAPAN)).setEphemeral(true).queue()
+                event.reply(i18n.format("command.error.action")).setEphemeral(true).queue()
                 return
             }
             val command = getCommandFromComponentId(actionData.componentIdData)
             if (guild == null || command == null) {
-                event.reply(messages.getMessage("command.error.internal", arrayOf(), Locale.JAPAN)).queue()
+                event.reply(i18n.format("command.error.internal")).queue()
                 return
             }
 
@@ -174,12 +171,12 @@ class CommandController
             val guild = event.guild
             val actionData = ActionDataManager[event.componentId]
             if (actionData == null) {
-                event.reply(messages.getMessage("command.error.action", arrayOf(), Locale.JAPAN)).setEphemeral(true).queue()
+                event.reply(i18n.format("command.error.action")).setEphemeral(true).queue()
                 return
             }
             val command = getCommandFromComponentId(actionData.componentIdData)
             if (guild == null || command == null) {
-                event.reply(messages.getMessage("command.error.internal", arrayOf(), Locale.JAPAN)).queue()
+                event.reply(i18n.format("command.error.internal")).queue()
                 return
             }
 
@@ -269,11 +266,7 @@ class CommandController
                 subcommands.map {
                     Commands.slash(
                         it.key.metadata.commandName,
-                        messages.getMessage(
-                            "command.description.${it.key.metadata.commandName}",
-                            arrayOf(),
-                            Locale.JAPAN,
-                        ),
+                        i18n.format("command.description.${it.key.metadata.commandName}"),
                     ).addSubcommands(it.value.map { it1 -> it1.subcommandData })
                 }
             return singleCommandServices.map { it.slashCommandData } + subCommandsData

@@ -1,24 +1,22 @@
 package dev.shiron.kotodiscord.util.service
 
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
-import org.springframework.context.MessageSource
-import java.util.*
 
-abstract class SingleCommandServiceClass(val commandMeta: SingleCommandEnum, private val messages: MessageSource) : RunnableCommandServiceClass(
-    commandMeta.metadata,
-    messages,
-) {
+abstract class SingleCommandServiceClass(
+    val commandMeta: SingleCommandEnum,
+    private val i18n: I18n,
+) : RunnableCommandServiceClass(
+        commandMeta.metadata,
+        i18n,
+    ) {
     open val slashCommandData: SlashCommandData
         get() =
             Commands.slash(
                 runMeta.commandName,
-                messages.getMessage(
-                    "command.description.$commandName",
-                    arrayOf(),
-                    Locale.JAPAN,
-                ),
+                i18n.format("command.description.$commandName"),
             ).addOptions(commandOptions)
                 .addOptions(sharedOptionData)
 

@@ -1,5 +1,6 @@
 package dev.shiron.kotodiscord.service.command.vc.notify
 
+import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.data.action.BotStringSelectData
 import dev.shiron.kotodiscord.util.data.action.ComponentReplayType
@@ -7,23 +8,23 @@ import dev.shiron.kotodiscord.util.meta.SubCommandEnum
 import dev.shiron.kotodiscord.util.service.SubCommandServiceClass
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class RemoveCommand
     @Autowired
-    constructor(private val vcService: VCService, private val messages: MessageSource) : SubCommandServiceClass(SubCommandEnum.VC_NOTIFICATION_REMOVE, messages) {
+    constructor(
+        private val vcService: VCService,
+        private val i18n: I18n,
+    ) : SubCommandServiceClass(
+            SubCommandEnum.VC_NOTIFICATION_REMOVE,
+            i18n,
+        ) {
         override fun onSlashCommand(cmd: BotSlashCommandData) {
             val vcData = vcService.listVCNotification(cmd.guild.idLong)
             if (vcData.isEmpty()) {
                 cmd.reply(
-                    messages.getMessage(
-                        "command.message.vc_notification.remove.empty",
-                        arrayOf(),
-                        Locale.JAPAN,
-                    ),
+                    i18n.format("command.message.vc_notification.remove.empty"),
                 )
                 return
             }
@@ -41,11 +42,7 @@ class RemoveCommand
                 }.build()
 
             cmd.event.hook.sendMessage(
-                messages.getMessage(
-                    "command.message.vc_notification.remove",
-                    arrayOf(),
-                    Locale.JAPAN,
-                ),
+                i18n.format("command.message.vc_notification.remove"),
             ).addActionRow(options).queue()
         }
 
