@@ -90,7 +90,7 @@ class BumpCommand
                         } else {
                             i18n.format(
                                 "command.message.bump.before",
-                                (job.execAt.until(LocalDateTime.now(), ChronoUnit.MINUTES) + 1).toString(),
+                                (LocalDateTime.now().until(job.execAt, ChronoUnit.MINUTES) + 1).toString(),
                             )
                         },
                     ),
