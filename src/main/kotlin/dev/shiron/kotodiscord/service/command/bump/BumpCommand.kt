@@ -134,18 +134,23 @@ class BumpCommand
         }
 
         override fun onButton(event: BotButtonData) {
+            val config = configRepository.findByGuildId(event.guild.idLong)
+
             if (event.actionData.key == "set") {
-                val config =
-                    configRepository.save(
+                val newConfig =
+                    config ?: configRepository.save(
                         BumpConfigData(
                             guildId = event.guild.idLong,
                             channelId = event.event.channel.idLong,
                             mentionId = null,
                         ),
                     )
+                newConfig.channelId = event.event.channel.idLong
+
+                jobQueueRepository.deleteByBumpConfig(newConfig)
                 jobQueueRepository.save(
                     BumpJobQueueData(
-                        bumpConfig = config,
+                        bumpConfig = newConfig,
                         createAt = LocalDateTime.now(),
                         execAt = LocalDateTime.now().plusMinutes(BumpVars.BUMP_NOTIFY_MIN.toLong()),
                     ),
@@ -163,8 +168,6 @@ class BumpCommand
                 )
                 return
             }
-
-            val config = configRepository.findByGuildId(event.guild.idLong)
 
             if (config == null) {
                 event.edit(

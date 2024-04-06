@@ -10,6 +10,6 @@ data class BumpConfigData(
     @Column(name = "id")
     val id: Long = 0,
     val guildId: Long,
-    val channelId: Long,
+    var channelId: Long,
     val mentionId: Long?,
 )
