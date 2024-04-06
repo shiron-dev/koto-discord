@@ -40,7 +40,7 @@ class AboutService
 
             val now = Date()
             val diff = now.time - started.time
-            val format = SimpleDateFormat("HHHH mm")
+            val format = SimpleDateFormat("MM:dd HH:mm")
             format.timeZone = TimeZone.getTimeZone("UTC")
             val formattedTime = format.format(Date(diff))
             cmd.event.hook.sendMessage(
