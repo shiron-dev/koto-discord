@@ -1,8 +1,8 @@
 package dev.shiron.kotodiscord.service.command.vc.notify
 
-import dev.shiron.kotodiscord.util.SubCommandServiceClass
-import dev.shiron.kotodiscord.util.data.BotSlashCommandData
+import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SubCommandEnum
+import dev.shiron.kotodiscord.util.service.SubCommandServiceClass
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service

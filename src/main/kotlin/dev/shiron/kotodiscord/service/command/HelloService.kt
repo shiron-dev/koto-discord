@@ -1,8 +1,8 @@
 package dev.shiron.kotodiscord.service.command
 
-import dev.shiron.kotodiscord.util.SingleCommandServiceClass
-import dev.shiron.kotodiscord.util.data.BotSlashCommandData
+import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
+import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service

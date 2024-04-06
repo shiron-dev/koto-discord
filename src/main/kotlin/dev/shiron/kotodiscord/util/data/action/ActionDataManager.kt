@@ -1,6 +1,5 @@
-package dev.shiron.kotodiscord.util
+package dev.shiron.kotodiscord.util.data.action
 
-import dev.shiron.kotodiscord.util.data.BotActionData
 import java.util.*
 
 object ActionDataManager {

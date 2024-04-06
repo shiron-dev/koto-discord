@@ -1,4 +1,4 @@
-package dev.shiron.kotodiscord.util.data
+package dev.shiron.kotodiscord.util.data.action
 
 import java.util.Date
 

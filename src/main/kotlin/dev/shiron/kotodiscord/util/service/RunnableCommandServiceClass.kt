@@ -1,6 +1,6 @@
-package dev.shiron.kotodiscord.util
+package dev.shiron.kotodiscord.util.service
 
-import dev.shiron.kotodiscord.util.data.*
+import dev.shiron.kotodiscord.util.data.action.*
 import dev.shiron.kotodiscord.util.meta.RunnableCommandMeta
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
@@ -29,6 +29,27 @@ abstract class RunnableCommandServiceClass(
         )
     }
 
+    abstract val commandName: String
+
+    fun genComponentId(
+        key: String,
+        shared: Boolean,
+        componentReplayType: ComponentReplayType,
+    ): String {
+        return ActionDataManager.newActionData(
+            BotActionData(
+                isShow = shared,
+                key = key,
+                componentIdData =
+                    ComponentIdData(
+                        commandName,
+                        null,
+                    ),
+                componentReplayType = componentReplayType,
+            ),
+        )
+    }
+
     abstract fun onSlashCommand(cmd: BotSlashCommandData)
 
     open fun onAutoComplete(event: CommandAutoCompleteInteractionEvent) {}
@@ -38,9 +59,4 @@ abstract class RunnableCommandServiceClass(
     open fun onStringSelect(event: BotStringSelectData) {}
 
     open fun onEntitySelect(event: BotEntitySelectData) {}
-
-    abstract fun getComponentId(
-        key: String,
-        componentReplayType: ComponentReplayType = ComponentReplayType.REPLAY,
-    ): String
 }
