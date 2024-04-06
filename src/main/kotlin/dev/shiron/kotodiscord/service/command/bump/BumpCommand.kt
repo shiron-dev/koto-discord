@@ -122,7 +122,7 @@ class BumpCommand
                         Locale.JAPAN,
                     ),
                     listOfNotNull(
-                        genBtnSet(cmd.shared),
+                        if (cmd.event.channelIdLong != config.channelId) genBtnSet(cmd.shared) else null,
                         genBtnUnset(cmd.shared),
                         genBtnSetMention(cmd.shared),
                         config.mentionId?.let {
