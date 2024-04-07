@@ -13,6 +13,7 @@ data class BotActionData(
     val key: String,
     val componentIdData: ComponentIdData,
     val componentReplayType: ComponentReplayType,
+    val data: Any?,
 ) {
     val createAt: Date = Date()
 }

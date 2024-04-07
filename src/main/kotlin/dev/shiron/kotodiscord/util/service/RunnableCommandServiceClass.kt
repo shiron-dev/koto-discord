@@ -33,6 +33,7 @@ abstract class RunnableCommandServiceClass(
         key: String,
         shared: Boolean,
         componentReplayType: ComponentReplayType,
+        data: Any? = null,
     ): String {
         return ActionDataManager.newActionData(
             BotActionData(
@@ -44,6 +45,7 @@ abstract class RunnableCommandServiceClass(
                         null,
                     ),
                 componentReplayType = componentReplayType,
+                data = data,
             ),
         )
     }

@@ -248,7 +248,7 @@ class CommandController
             return null
         }
 
-        @Scheduled(fixedDelay = 30)
+        @Scheduled(fixedDelay = 30 * 60 * 1000)
         private fun clearActionData() {
             ActionDataManager.cleanByMin(appProperties.actionDataCleanMin ?: 60)
         }
