@@ -9,7 +9,7 @@ import dev.shiron.kotodiscord.repository.BumpJobQueueDataRepository
 import dev.shiron.kotodiscord.util.data.action.BotButtonData
 import dev.shiron.kotodiscord.util.data.action.BotEntitySelectData
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
-import dev.shiron.kotodiscord.util.data.action.ComponentReplayType
+import dev.shiron.kotodiscord.util.data.action.ComponentSendType
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import dev.shiron.kotodiscord.vars.BumpVars
@@ -34,28 +34,28 @@ class BumpCommand
         ) {
         fun genBtnSet(shared: Boolean): Button {
             return Button.secondary(
-                genComponentId("set", shared, ComponentReplayType.EDIT),
+                genComponentId("set", shared, ComponentSendType.EDIT),
                 i18n.format("button.bump.set"),
             )
         }
 
         fun genBtnUnset(shared: Boolean): Button {
             return Button.secondary(
-                genComponentId("unset", shared, ComponentReplayType.EDIT),
+                genComponentId("unset", shared, ComponentSendType.EDIT),
                 i18n.format("button.bump.unset"),
             )
         }
 
         fun genBtnSetMention(shared: Boolean): Button {
             return Button.secondary(
-                genComponentId("set_mention", shared, ComponentReplayType.EDIT),
+                genComponentId("set_mention", shared, ComponentSendType.EDIT),
                 i18n.format("button.bump.set_mention"),
             )
         }
 
         fun genBtnUnsetMention(shared: Boolean): Button {
             return Button.secondary(
-                genComponentId("unset_mention", shared, ComponentReplayType.EDIT),
+                genComponentId("unset_mention", shared, ComponentSendType.EDIT),
                 i18n.format("button.bump.unset_mention"),
             )
         }
@@ -64,7 +64,7 @@ class BumpCommand
             val config = configRepository.findByGuildId(cmd.guild.idLong)
 
             if (config == null) {
-                cmd.reply(
+                cmd.send(
                     i18n.format("command.message.bump.none"),
                     listOf(
                         genBtnSet(cmd.shared),
@@ -80,7 +80,7 @@ class BumpCommand
                         ),
                     )
 
-                cmd.reply(
+                cmd.send(
                     i18n.format(
                         "command.message.bump.msg",
                         "<#${config.channelId}>",
@@ -128,7 +128,7 @@ class BumpCommand
                         execAt = LocalDateTime.now().plusMinutes(BumpVars.BUMP_NOTIFY_MIN.toLong()),
                     ),
                 )
-                event.edit(
+                event.send(
                     i18n.format(
                         "command.message.bump.seted",
                         event.event.channel.asMention,
@@ -142,7 +142,7 @@ class BumpCommand
             }
 
             if (config == null) {
-                event.edit(
+                event.send(
                     i18n.format("command.message.bump.none"),
                     listOf(
                         genBtnSet(event.actionData.isShow),
@@ -154,7 +154,7 @@ class BumpCommand
 
             when (event.actionData.key) {
                 "unset" -> {
-                    event.edit(
+                    event.send(
                         i18n.format(
                             "command.message.bump.unseted",
                             "<#${config.channelId}>",
@@ -165,14 +165,14 @@ class BumpCommand
                     configRepository.delete(config)
                 }
                 "set_mention" ->
-                    event.edit(
+                    event.send(
                         i18n.format("command.message.bump.set_mention"),
                         listOf(
-                            EntitySelectMenu.create(genComponentId("select_mention", event.actionData.isShow, ComponentReplayType.EDIT), EntitySelectMenu.SelectTarget.ROLE, EntitySelectMenu.SelectTarget.USER).build(),
+                            EntitySelectMenu.create(genComponentId("select_mention", event.actionData.isShow, ComponentSendType.EDIT), EntitySelectMenu.SelectTarget.ROLE, EntitySelectMenu.SelectTarget.USER).build(),
                         ),
                     )
                 "unset_mention" -> {
-                    event.edit(
+                    event.send(
                         i18n.format("command.message.bump.mention.unseted"),
                     )
                     configRepository.save(config.copy(mentionId = null))
@@ -186,7 +186,7 @@ class BumpCommand
             if (event.actionData.key == "select_mention") {
                 val mentionId = event.values.first()
                 configRepository.save(config.copy(mentionId = mentionId.idLong))
-                event.edit(
+                event.send(
                     i18n.format(
                         "command.message.bump.mention.seted",
                         mentionId.asMention,

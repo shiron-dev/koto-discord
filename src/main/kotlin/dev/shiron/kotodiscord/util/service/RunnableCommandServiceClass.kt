@@ -32,7 +32,8 @@ abstract class RunnableCommandServiceClass(
     fun genComponentId(
         key: String,
         shared: Boolean,
-        componentReplayType: ComponentReplayType,
+        ComponentSendType: ComponentSendType,
+        data: Any? = null,
     ): String {
         return ActionDataManager.newActionData(
             BotActionData(
@@ -43,7 +44,8 @@ abstract class RunnableCommandServiceClass(
                         commandName,
                         null,
                     ),
-                componentReplayType = componentReplayType,
+                componentSendType = ComponentSendType,
+                data = data,
             ),
         )
     }
