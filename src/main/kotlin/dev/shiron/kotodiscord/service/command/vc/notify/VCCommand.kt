@@ -24,21 +24,21 @@ class VCCommand
         ) {
         fun genBtnSet(shared: Boolean): Button {
             return Button.secondary(
-                genComponentId("set", shared, ComponentReplayType.EDIT),
+                genComponentId("set", shared, ComponentSendType.EDIT),
                 i18n.format("button.vc_notification.set"),
             )
         }
 
         fun genBtnSetAll(shared: Boolean): Button {
             return Button.secondary(
-                genComponentId("set_all", shared, ComponentReplayType.EDIT),
+                genComponentId("set_all", shared, ComponentSendType.EDIT),
                 i18n.format("button.vc_notification.set_all"),
             )
         }
 
         fun genBtnRemove(shared: Boolean): Button {
             return Button.secondary(
-                genComponentId("remove", shared, ComponentReplayType.EDIT),
+                genComponentId("remove", shared, ComponentSendType.EDIT),
                 i18n.format("button.vc_notification.remove"),
             )
         }
@@ -71,31 +71,31 @@ class VCCommand
                 componets.add(genBtnRemove(cmd.shared))
             }
 
-            cmd.reply(msg, componets.ifEmpty { null })
+            cmd.send(msg, componets.ifEmpty { null })
         }
 
         override fun onButton(event: BotButtonData) {
             when (event.actionData.key) {
                 "set" -> {
-                    event.edit(
+                    event.send(
                         i18n.format("command.message.vc_notification.set.vc"),
                         listOf(
                             EntitySelectMenu.create(
-                                genComponentId("vc", event.actionData.isShow, ComponentReplayType.EDIT),
+                                genComponentId("vc", event.actionData.isShow, ComponentSendType.EDIT),
                                 EntitySelectMenu.SelectTarget.CHANNEL,
                             ).build(),
                         ),
                     )
                 }
                 "set_all" -> {
-                    event.edit(
+                    event.send(
                         i18n.format("command.message.vc_notification.set.text"),
                         listOf(
                             EntitySelectMenu.create(
                                 genComponentId(
                                     "text",
                                     event.actionData.isShow,
-                                    ComponentReplayType.EDIT,
+                                    ComponentSendType.EDIT,
                                     null,
                                 ),
                                 EntitySelectMenu.SelectTarget.CHANNEL,
@@ -107,7 +107,7 @@ class VCCommand
                     val dataList = vcService.listVCNotification(event.guild.idLong)
 
                     val option =
-                        StringSelectMenu.create(genComponentId("rm", event.actionData.isShow, ComponentReplayType.EDIT)).apply {
+                        StringSelectMenu.create(genComponentId("rm", event.actionData.isShow, ComponentSendType.EDIT)).apply {
                             dataList.forEachIndexed { index, vcNotificationData ->
                                 val vcId = vcNotificationData.vcCategoryId ?: vcNotificationData.vcChannelId
                                 val vcName = vcId.let { event.guild.channels.find { it.idLong == vcId }?.name }?.let { "#$it" } ?: "サーバー全体"
@@ -118,7 +118,7 @@ class VCCommand
                                 )
                             }
                         }.build()
-                    event.edit(
+                    event.send(
                         i18n.format("command.message.vc_notification.remove"),
                         listOf(option),
                     )
@@ -129,14 +129,14 @@ class VCCommand
         override fun onEntitySelect(event: BotEntitySelectData) {
             when (event.actionData.key) {
                 "vc" -> {
-                    event.edit(
+                    event.send(
                         i18n.format("command.message.vc_notification.set.text"),
                         listOf(
                             EntitySelectMenu.create(
                                 genComponentId(
                                     "text",
                                     event.actionData.isShow,
-                                    ComponentReplayType.EDIT,
+                                    ComponentSendType.EDIT,
                                     event.values.first().idLong,
                                 ),
                                 EntitySelectMenu.SelectTarget.CHANNEL,
@@ -152,11 +152,11 @@ class VCCommand
                         val textChannel = event.guild.getTextChannelById(event.values.first().idLong)
 
                         if (vcChannelId != null && (vcChannel == null && categoryChannel == null)) {
-                            event.edit(i18n.format("command.message.vc_notification.set.error.vc"))
+                            event.send(i18n.format("command.message.vc_notification.set.error.vc"))
                             return
                         }
                         if (textChannel == null) {
-                            event.edit(i18n.format("command.message.vc_notification.set.error.text"))
+                            event.send(i18n.format("command.message.vc_notification.set.error.text"))
                             return
                         }
 
@@ -168,7 +168,7 @@ class VCCommand
                                 textChannelId = textChannel.idLong,
                             ),
                         )
-                        event.edit(
+                        event.send(
                             i18n.format(
                                 "command.message.vc_notification.set.success",
                                 vcChannel?.asMention ?: categoryChannel?.asMention ?: "サーバー全体",
@@ -186,7 +186,7 @@ class VCCommand
                     val index = event.values.first().toIntOrNull()?.minus(1) ?: return
                     val data = vcService.listVCNotification(event.guild.idLong)[index]
                     vcService.removeVCNotification(data)
-                    event.edit("${index + 1} : ${data.vcName}  -> <#${data.textChannelId}>\n" + "の設定を削除しました")
+                    event.send("${index + 1} : ${data.vcName}  -> <#${data.textChannelId}>\n" + "の設定を削除しました")
                 }
             }
         }

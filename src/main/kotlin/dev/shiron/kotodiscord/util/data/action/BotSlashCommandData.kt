@@ -11,4 +11,4 @@ data class BotSlashCommandData(
     val shared: Boolean,
     val historyData: CommandHistory,
     val metrics: MetricsClass,
-) : BotReplayEventClass(event, historyData, metrics)
+) : BotSendEventClass(event, ComponentSendType.REPLAY, historyData, metrics)

@@ -113,9 +113,9 @@ class CommandController
                     metrics = metrics,
                 )
 
-            when (actionData.componentReplayType) {
-                ComponentReplayType.REPLAY -> event.deferReply().setEphemeral(actionData.isShow).queue()
-                ComponentReplayType.EDIT -> event.deferEdit().queue()
+            when (actionData.componentSendType) {
+                ComponentSendType.REPLAY -> event.deferReply().setEphemeral(actionData.isShow).queue()
+                ComponentSendType.EDIT -> event.deferEdit().queue()
                 else -> {}
             }
 
@@ -158,9 +158,9 @@ class CommandController
                     metrics = metrics,
                 )
 
-            when (actionData.componentReplayType) {
-                ComponentReplayType.REPLAY -> event.deferReply().setEphemeral(actionData.isShow).queue()
-                ComponentReplayType.EDIT -> event.deferEdit().queue()
+            when (actionData.componentSendType) {
+                ComponentSendType.REPLAY -> event.deferReply().setEphemeral(actionData.isShow).queue()
+                ComponentSendType.EDIT -> event.deferEdit().queue()
                 else -> {}
             }
 
@@ -203,9 +203,9 @@ class CommandController
                     metrics = metrics,
                 )
 
-            when (actionData.componentReplayType) {
-                ComponentReplayType.REPLAY -> event.deferReply().setEphemeral(actionData.isShow).queue()
-                ComponentReplayType.EDIT -> event.deferEdit().queue()
+            when (actionData.componentSendType) {
+                ComponentSendType.REPLAY -> event.deferReply().setEphemeral(actionData.isShow).queue()
+                ComponentSendType.EDIT -> event.deferEdit().queue()
                 else -> {}
             }
 

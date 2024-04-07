@@ -11,4 +11,4 @@ data class BotButtonData(
     val actionData: BotActionData,
     val historyData: CommandHistory,
     val metrics: MetricsClass,
-) : BotReplayEventClass(event, historyData, metrics)
+) : BotSendEventClass(event, actionData.componentSendType, historyData, metrics)

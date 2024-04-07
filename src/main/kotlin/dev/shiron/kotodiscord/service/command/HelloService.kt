@@ -17,7 +17,7 @@ class HelloService
             i18n,
         ) {
         override fun onSlashCommand(cmd: BotSlashCommandData) {
-            cmd.reply(
+            cmd.send(
                 i18n.format(
                     "command.message.hello",
                     cmd.event.user.asMention,
