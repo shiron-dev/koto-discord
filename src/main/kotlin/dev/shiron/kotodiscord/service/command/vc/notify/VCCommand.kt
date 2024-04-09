@@ -5,6 +5,9 @@ import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.util.data.action.*
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.channel.ChannelType
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion
 import net.dv8tion.jda.api.interactions.components.ActionComponent
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.selections.EntitySelectMenu
@@ -47,31 +50,31 @@ class VCCommand
             val dataList = vcService.listVCNotification(cmd.guild.idLong)
 
             var msg = i18n.format("command.message.vc_notification.main") + "\n\n"
-            val componets = mutableListOf<ActionComponent>()
+            val components = mutableListOf<ActionComponent>()
 
             if (dataList.isEmpty()) {
                 msg += i18n.format("command.message.vc_notification.empty")
-                componets.add(genBtnSetAll(cmd.shared))
-                componets.add(genBtnSet(cmd.shared))
+                components.add(genBtnSetAll(cmd.shared))
+                components.add(genBtnSet(cmd.shared))
             } else {
                 msg += i18n.format("command.message.vc_notification.exist") + "\n"
 
                 if (dataList.size < 10) {
-                    if (dataList.find { it.vcCategoryId == null && it.vcChannelId == null } == null) {
-                        componets.add(genBtnSetAll(cmd.shared))
+                    if (dataList.find { it.vcCategoryId == null && it.vcChannelId == null && it.textChannelId == cmd.event.channel.idLong } == null) {
+                        components.add(genBtnSetAll(cmd.shared))
                     }
 
-                    componets.add(genBtnSet(cmd.shared))
+                    components.add(genBtnSet(cmd.shared))
                 } else {
                     msg += i18n.format("command.message.vc_notification.set.limit")
                 }
 
                 msg += dataList.joinToString("\n") { "- ${it.vcName} -> <#${it.textChannelId}>" }
 
-                componets.add(genBtnRemove(cmd.shared))
+                components.add(genBtnRemove(cmd.shared))
             }
 
-            cmd.send(msg, componets.ifEmpty { null })
+            cmd.send(msg, components.ifEmpty { null })
         }
 
         override fun onButton(event: BotButtonData) {
@@ -88,20 +91,7 @@ class VCCommand
                     )
                 }
                 "set_all" -> {
-                    event.send(
-                        i18n.format("command.message.vc_notification.set.text"),
-                        listOf(
-                            EntitySelectMenu.create(
-                                genComponentId(
-                                    "text",
-                                    event.actionData.isShow,
-                                    ComponentSendType.EDIT,
-                                    null,
-                                ),
-                                EntitySelectMenu.SelectTarget.CHANNEL,
-                            ).build(),
-                        ),
-                    )
+                    setVCNotification(event.guild, null, event.event.channel, event)
                 }
                 "remove" -> {
                     val dataList = vcService.listVCNotification(event.guild.idLong)
@@ -129,53 +119,8 @@ class VCCommand
         override fun onEntitySelect(event: BotEntitySelectData) {
             when (event.actionData.key) {
                 "vc" -> {
-                    event.send(
-                        i18n.format("command.message.vc_notification.set.text"),
-                        listOf(
-                            EntitySelectMenu.create(
-                                genComponentId(
-                                    "text",
-                                    event.actionData.isShow,
-                                    ComponentSendType.EDIT,
-                                    event.values.first().idLong,
-                                ),
-                                EntitySelectMenu.SelectTarget.CHANNEL,
-                            ).build(),
-                        ),
-                    )
-                }
-                "text" -> {
-                    val vcChannelId = event.actionData.data
-                    if (vcChannelId is Long?) {
-                        val vcChannel = vcChannelId?.let { event.guild.getVoiceChannelById(it) }
-                        val categoryChannel = vcChannelId?.let { event.guild.getCategoryById(it) }
-                        val textChannel = event.guild.getTextChannelById(event.values.first().idLong)
-
-                        if (vcChannelId != null && (vcChannel == null && categoryChannel == null)) {
-                            event.send(i18n.format("command.message.vc_notification.set.error.vc"))
-                            return
-                        }
-                        if (textChannel == null) {
-                            event.send(i18n.format("command.message.vc_notification.set.error.text"))
-                            return
-                        }
-
-                        vcService.setVCNotification(
-                            VCNotificationData(
-                                guildId = event.guild.idLong,
-                                vcCategoryId = categoryChannel?.idLong,
-                                vcChannelId = vcChannel?.idLong,
-                                textChannelId = textChannel.idLong,
-                            ),
-                        )
-                        event.send(
-                            i18n.format(
-                                "command.message.vc_notification.set.success",
-                                vcChannel?.asMention ?: categoryChannel?.asMention ?: "サーバー全体",
-                                textChannel.asMention,
-                            ),
-                        )
-                    }
+                    val vcChannelId = event.event.values.first().idLong
+                    setVCNotification(event.guild, vcChannelId, event.event.channel, event)
                 }
             }
         }
@@ -186,8 +131,50 @@ class VCCommand
                     val index = event.values.first().toIntOrNull()?.minus(1) ?: return
                     val data = vcService.listVCNotification(event.guild.idLong)[index]
                     vcService.removeVCNotification(data)
-                    event.send("${index + 1} : ${data.vcName}  -> <#${data.textChannelId}>\n" + "の設定を削除しました")
+                    event.send(
+                        i18n.format(
+                            "command.message.vc_notification.remove.success",
+                            (index + 1).toString(),
+                            data.vcName,
+                            "<#${data.textChannelId}>",
+                        ),
+                    )
                 }
             }
+        }
+
+        private fun setVCNotification(
+            guild: Guild,
+            vcChannelId: Long?,
+            textChannel: MessageChannelUnion,
+            event: BotSendEventClass,
+        ) {
+            val vcChannel = vcChannelId?.let { guild.getVoiceChannelById(it) }
+            val categoryChannel = vcChannelId?.let { guild.getCategoryById(it) }
+
+            if (vcChannelId != null && (vcChannel == null && categoryChannel == null)) {
+                event.send(i18n.format("command.message.vc_notification.set.error.vc"))
+                return
+            }
+            if (textChannel.type != ChannelType.TEXT) {
+                event.send(i18n.format("command.message.vc_notification.set.error.text"))
+                return
+            }
+
+            vcService.setVCNotification(
+                VCNotificationData(
+                    guildId = guild.idLong,
+                    vcCategoryId = categoryChannel?.idLong,
+                    vcChannelId = vcChannel?.idLong,
+                    textChannelId = textChannel.idLong,
+                ),
+            )
+            event.send(
+                i18n.format(
+                    "command.message.vc_notification.set.success",
+                    vcChannel?.asMention ?: categoryChannel?.asMention ?: "サーバー全体",
+                    textChannel.asMention,
+                ),
+            )
         }
     }
