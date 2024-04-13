@@ -15,6 +15,7 @@ data class VCNotificationData(
     val textChannelId: Long,
     @Column(columnDefinition = "boolean default true")
     val isSmart: Boolean = true,
+    val mentionId: Long?,
 ) {
     val vcName: String
         get() =

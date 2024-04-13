@@ -53,6 +53,13 @@ class VCCommand
             )
         }
 
+        fun genBtnSetMention(shared: Boolean): Button {
+            return Button.secondary(
+                genComponentId("set_mention", shared, ComponentSendType.EDIT),
+                i18n.format("button.vc_notification.set_mention"),
+            )
+        }
+
         override fun onSlashCommand(cmd: BotSlashCommandData) {
             val dataList = vcService.listVCNotification(cmd.guild.idLong)
 
@@ -78,10 +85,11 @@ class VCCommand
 
                 msg +=
                     dataList.joinToString("\n") {
-                        "- " + getConfString(it)
+                        "- " + getConfString(it, cmd.guild, true)
                     }
 
                 components.add(genBtnSetSmart(cmd.shared))
+                components.add(genBtnSetMention(cmd.shared))
                 components.add(genBtnRemove(cmd.shared))
             }
 
@@ -112,6 +120,14 @@ class VCCommand
                         listOf(buildOptionSelection("set_smart", dataList, event.guild, event.actionData.isShow)),
                     )
                 }
+                "set_mention" -> {
+                    val dataList = vcService.listVCNotification(event.guild.idLong)
+
+                    event.send(
+                        i18n.format("command.message.vc_notification.set_mention"),
+                        listOf(buildOptionSelection("set_mention", dataList, event.guild, event.actionData.isShow)),
+                    )
+                }
                 "remove" -> {
                     val dataList = vcService.listVCNotification(event.guild.idLong)
 
@@ -128,6 +144,26 @@ class VCCommand
                 "vc" -> {
                     val vcChannelId = event.event.values.first().idLong
                     setVCNotification(event.guild, vcChannelId, event.event.channel, event)
+                }
+                "mention" -> {
+                    val index = event.actionData.data
+                    if (index is Int) {
+                        val data = vcService.listVCNotification(event.guild.idLong)[index]
+                        val mention = event.event.values.first()
+                        vcService.setVCNotification(data.copy(mentionId = mention.idLong))
+                        event.send(
+                            i18n.format(
+                                "command.message.vc_notification.set_mention.success",
+                                (index + 1).toString(),
+                                data.vcName,
+                                "<#${data.textChannelId}>",
+                                i18n.format(
+                                    "command.message.vc_notification.set_mention.true",
+                                    mention.asMention,
+                                ),
+                            ),
+                        )
+                    }
                 }
             }
         }
@@ -165,6 +201,35 @@ class VCCommand
                         ),
                     )
                 }
+                "set_mention" -> {
+                    val index = event.values.first().toIntOrNull()?.minus(1) ?: return
+                    val data = vcService.listVCNotification(event.guild.idLong)[index]
+                    val mentionId = data.mentionId
+                    if (mentionId == null) {
+                        event.send(
+                            i18n.format(
+                                "command.message.vc_notification.set_mention.select",
+                            ),
+                            listOf(
+                                EntitySelectMenu.create(
+                                    genComponentId("mention", event.actionData.isShow, ComponentSendType.EDIT, index),
+                                    EntitySelectMenu.SelectTarget.USER,
+                                ).build(),
+                            ),
+                        )
+                    } else {
+                        vcService.setVCNotification(data.copy(mentionId = null))
+                        event.send(
+                            i18n.format(
+                                "command.message.vc_notification.set_mention.success",
+                                (index + 1).toString(),
+                                data.vcName,
+                                "<#${data.textChannelId}>",
+                                i18n.format("command.message.vc_notification.set_mention.false"),
+                            ),
+                        )
+                    }
+                }
             }
         }
 
@@ -192,6 +257,7 @@ class VCCommand
                     vcCategoryId = categoryChannel?.idLong,
                     vcChannelId = vcChannel?.idLong,
                     textChannelId = textChannel.idLong,
+                    mentionId = null,
                 ),
             )
             event.send(
@@ -211,21 +277,8 @@ class VCCommand
         ): StringSelectMenu {
             return StringSelectMenu.create(genComponentId(key, isShow, ComponentSendType.EDIT)).apply {
                 dataList.forEachIndexed { index, vcNotificationData ->
-                    val vcId = vcNotificationData.vcCategoryId ?: vcNotificationData.vcChannelId
-                    val vcName = vcId.let { guild.channels.find { it.idLong == vcId }?.name }?.let { "#$it" } ?: "サーバー全体"
-                    val textName = guild.channels.find { it.idLong == vcNotificationData.textChannelId }?.name?.let { "#$it" } ?: "不明"
                     addOption(
-                        "${index + 1}" +
-                            i18n.format(
-                                "command.message.vc_notification.conf",
-                                vcName,
-                                textName,
-                                if (vcNotificationData.isSmart) {
-                                    i18n.format("command.message.vc_notification.set_smart.true")
-                                } else {
-                                    i18n.format("command.message.vc_notification.set_smart.false")
-                                },
-                            ),
+                        "${index + 1}" + getConfString(vcNotificationData, guild, false),
                         "${index + 1}",
                     )
                 }
@@ -234,16 +287,30 @@ class VCCommand
 
         private fun getConfString(
             data: VCNotificationData,
+            guild: Guild,
+            asMention: Boolean,
         ): String {
             return i18n.format(
                 "command.message.vc_notification.conf",
                 data.vcName,
-                "<#${data.textChannelId}>",
+                if (asMention) {
+                    guild.getTextChannelById(data.textChannelId)?.asMention
+                } else {
+                    guild.getTextChannelById(data.textChannelId)?.name?.let { "#$it" }
+                } ?: "#不明",
                 if (data.isSmart) {
                     i18n.format("command.message.vc_notification.set_smart.true")
                 } else {
                     i18n.format("command.message.vc_notification.set_smart.false")
                 },
+                i18n.format(
+                    "command.message.vc_notification.set_mention.${data.mentionId != null}",
+                    if (asMention) {
+                        data.mentionId?.let { (guild.getMemberById(it) ?: guild.getRoleById(it))?.asMention }
+                    } else {
+                        data.mentionId?.let { guild.getMemberById(it)?.effectiveName ?: guild.getRoleById(it)?.name }
+                    } ?: "@不明",
+                ),
             )
         }
     }
