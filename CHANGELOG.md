@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.3.0](https://github.com/shiron-dev/koto-discord/compare/v1.2.2...v1.3.0) (2024-04-13)
+
+
+### Features
+
+* add flyway ([92eddf6](https://github.com/shiron-dev/koto-discord/commit/92eddf64a5b821a0e5ef07fe5554312855682f8a))
+* add I18n class ([d61881a](https://github.com/shiron-dev/koto-discord/commit/d61881ac325a82bff34231ab4c710c8e575131e6))
+* add smart notify to vc notification ([0623f53](https://github.com/shiron-dev/koto-discord/commit/0623f53d1371048f11ad4313fb11ce7e095c47e3))
+* add vc notify mention ([53222a9](https://github.com/shiron-dev/koto-discord/commit/53222a93d5b7c048485a6a6f3836b4859ba7a0c9))
+* change vc_notification text channel setter ([86c3f9d](https://github.com/shiron-dev/koto-discord/commit/86c3f9d7a3d21e58dc6d316d64890dfac2b4a9eb))
+* update vc_notification to modern ([9663866](https://github.com/shiron-dev/koto-discord/commit/9663866a0a2b5e4e21cae0fc3f031c28d30e4711))
+
+
+### Bug Fixes
+
+* bump command ([e5512bf](https://github.com/shiron-dev/koto-discord/commit/e5512bfd15fcb78e306304e512db7f729ac3cd97))
+
 ## [1.2.2](https://github.com/shiron-dev/koto-discord/compare/v1.2.1...v1.2.2) (2024-04-06)
 
 
