@@ -46,6 +46,13 @@ class VCCommand
             )
         }
 
+        fun genBtnSetSmart(shared: Boolean): Button {
+            return Button.secondary(
+                genComponentId("set_smart", shared, ComponentSendType.EDIT),
+                i18n.format("button.vc_notification.set_smart"),
+            )
+        }
+
         override fun onSlashCommand(cmd: BotSlashCommandData) {
             val dataList = vcService.listVCNotification(cmd.guild.idLong)
 
@@ -69,8 +76,18 @@ class VCCommand
                     msg += i18n.format("command.message.vc_notification.set.limit")
                 }
 
-                msg += dataList.joinToString("\n") { "- ${it.vcName} -> <#${it.textChannelId}>" }
+                msg +=
+                    dataList.joinToString("\n") {
+                        "- ${it.vcName} -> <#${it.textChannelId}> ${
+                            if (it.isSmart) {
+                                i18n.format("command.message.vc_notification.set_smart.true")
+                            } else {
+                                i18n.format("command.message.vc_notification.set_smart.false")
+                            }
+                        }"
+                    }
 
+                components.add(genBtnSetSmart(cmd.shared))
                 components.add(genBtnRemove(cmd.shared))
             }
 
@@ -93,24 +110,20 @@ class VCCommand
                 "set_all" -> {
                     setVCNotification(event.guild, null, event.event.channel, event)
                 }
+                "set_smart" -> {
+                    val dataList = vcService.listVCNotification(event.guild.idLong)
+
+                    event.send(
+                        i18n.format("command.message.vc_notification.set_smart"),
+                        listOf(buildOptionSelection("set_smart", dataList, event.guild, event.actionData.isShow)),
+                    )
+                }
                 "remove" -> {
                     val dataList = vcService.listVCNotification(event.guild.idLong)
 
-                    val option =
-                        StringSelectMenu.create(genComponentId("rm", event.actionData.isShow, ComponentSendType.EDIT)).apply {
-                            dataList.forEachIndexed { index, vcNotificationData ->
-                                val vcId = vcNotificationData.vcCategoryId ?: vcNotificationData.vcChannelId
-                                val vcName = vcId.let { event.guild.channels.find { it.idLong == vcId }?.name }?.let { "#$it" } ?: "サーバー全体"
-                                val textName = event.guild.channels.find { it.idLong == vcNotificationData.textChannelId }?.name?.let { "#$it" } ?: "不明"
-                                addOption(
-                                    "${index + 1} $vcName -> $textName",
-                                    "${index + 1}",
-                                )
-                            }
-                        }.build()
                     event.send(
                         i18n.format("command.message.vc_notification.remove"),
-                        listOf(option),
+                        listOf(buildOptionSelection("rm", dataList, event.guild, event.actionData.isShow)),
                     )
                 }
             }
@@ -137,6 +150,24 @@ class VCCommand
                             (index + 1).toString(),
                             data.vcName,
                             "<#${data.textChannelId}>",
+                        ),
+                    )
+                }
+                "set_smart" -> {
+                    val index = event.values.first().toIntOrNull()?.minus(1) ?: return
+                    val data = vcService.listVCNotification(event.guild.idLong)[index]
+                    vcService.setVCNotification(data.copy(isSmart = !data.isSmart))
+                    event.send(
+                        i18n.format(
+                            "command.message.vc_notification.set_smart.success",
+                            (index + 1).toString(),
+                            data.vcName,
+                            "<#${data.textChannelId}>",
+                            if (!data.isSmart) {
+                                i18n.format("command.message.vc_notification.set_smart.true")
+                            } else {
+                                i18n.format("command.message.vc_notification.set_smart.false")
+                            },
                         ),
                     )
                 }
@@ -176,5 +207,30 @@ class VCCommand
                     textChannel.asMention,
                 ),
             )
+        }
+
+        private fun buildOptionSelection(
+            key: String,
+            dataList: List<VCNotificationData>,
+            guild: Guild,
+            isShow: Boolean,
+        ): StringSelectMenu {
+            return StringSelectMenu.create(genComponentId(key, isShow, ComponentSendType.EDIT)).apply {
+                dataList.forEachIndexed { index, vcNotificationData ->
+                    val vcId = vcNotificationData.vcCategoryId ?: vcNotificationData.vcChannelId
+                    val vcName = vcId.let { guild.channels.find { it.idLong == vcId }?.name }?.let { "#$it" } ?: "サーバー全体"
+                    val textName = guild.channels.find { it.idLong == vcNotificationData.textChannelId }?.name?.let { "#$it" } ?: "不明"
+                    addOption(
+                        "${index + 1} $vcName -> $textName ${
+                            if (vcNotificationData.isSmart) {
+                                i18n.format("command.message.vc_notification.set_smart.true")
+                            } else {
+                                i18n.format("command.message.vc_notification.set_smart.false")
+                            }
+                        }",
+                        "${index + 1}",
+                    )
+                }
+            }.build()
         }
     }

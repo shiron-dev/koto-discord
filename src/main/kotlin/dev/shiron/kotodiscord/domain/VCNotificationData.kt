@@ -13,14 +13,9 @@ data class VCNotificationData(
     val vcChannelId: Long?,
     val vcCategoryId: Long?,
     val textChannelId: Long,
+    @Column(columnDefinition = "boolean default true")
+    val isSmart: Boolean = true,
 ) {
-    fun like(other: VCNotificationData): Boolean {
-        return guildId == other.guildId &&
-            vcChannelId == other.vcChannelId &&
-            vcCategoryId == other.vcCategoryId &&
-            textChannelId == other.textChannelId
-    }
-
     val vcName: String
         get() =
             run {
