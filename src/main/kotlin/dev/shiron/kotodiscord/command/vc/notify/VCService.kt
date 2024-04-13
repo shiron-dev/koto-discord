@@ -44,6 +44,7 @@ class VCService
                 val textChannelId: Long,
                 val isJoin: Boolean,
                 val isLeft: Boolean,
+                val config: VCNotificationData,
             )
 
             data class SmartTextData(
@@ -78,6 +79,7 @@ class VCService
                                 data.textChannelId,
                                 isJoin,
                                 isLeft,
+                                data,
                             ),
                         )
                     }
@@ -144,7 +146,9 @@ class VCService
                         ),
                     )
                 }
-                guild.getTextChannelById(textData.textChannelId)?.sendMessage("")?.setEmbeds(eb.build())?.queue()
+
+                val mention = textData.config.mentionId?.let { guild.getMemberById(it)?.asMention }
+                guild.getTextChannelById(textData.textChannelId)?.sendMessage(mention ?: "")?.setEmbeds(eb.build())?.queue()
             }
 
             for (textData in smartTextDataList) {
@@ -183,7 +187,8 @@ class VCService
 
                 val message = VCSmartNotifyManager[textData.config]?.message
                 if (message == null) {
-                    guild.getTextChannelById(textData.textChannelId)?.sendMessage("")?.setEmbeds(eb.build())?.queue {
+                    val mention = textData.config.mentionId?.let { guild.getMemberById(it)?.asMention }
+                    guild.getTextChannelById(textData.textChannelId)?.sendMessage(mention ?: "")?.setEmbeds(eb.build())?.queue {
                         VCSmartNotifyManager.new(
                             VCSmartNotifyData(
                                 textData.config,
