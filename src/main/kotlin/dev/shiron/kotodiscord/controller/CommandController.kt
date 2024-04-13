@@ -9,6 +9,7 @@ import dev.shiron.kotodiscord.util.service.RunnableCommandServiceClass
 import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import dev.shiron.kotodiscord.util.service.SubCommandServiceClass
 import dev.shiron.kotodiscord.vars.properties.AppProperties
+import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
@@ -17,6 +18,7 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
+import net.dv8tion.jda.api.interactions.components.ComponentInteraction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Controller
@@ -79,19 +81,7 @@ class CommandController
         }
 
         override fun onButtonInteraction(event: ButtonInteractionEvent) {
-            val guild = event.guild
-            val actionData = ActionDataManager[event.componentId]
-            if (actionData == null) {
-                event.reply(i18n.format("command.error.action")).setEphemeral(true).queue()
-                return
-            }
-            val command = getCommandFromComponentId(actionData.componentIdData)
-            if (guild == null || command == null) {
-                event.reply(i18n.format("command.error.internal")).queue()
-                return
-            }
-
-            ActionDataManager.removeActionData(event.componentId)
+            val (guild, actionData, command) = getDataFromInteractionOrSendError(event) ?: return
 
             val data =
                 BotButtonData(
@@ -123,19 +113,7 @@ class CommandController
         }
 
         override fun onStringSelectInteraction(event: StringSelectInteractionEvent) {
-            val guild = event.guild
-            val actionData = ActionDataManager[event.componentId]
-            if (actionData == null) {
-                event.reply(i18n.format("command.error.action")).setEphemeral(true).queue()
-                return
-            }
-            val command = getCommandFromComponentId(actionData.componentIdData)
-            if (guild == null || command == null) {
-                event.reply(i18n.format("command.error.internal")).queue()
-                return
-            }
-
-            ActionDataManager.removeActionData(event.componentId)
+            val (guild, actionData, command) = getDataFromInteractionOrSendError(event) ?: return
 
             val data =
                 BotStringSelectData(
@@ -168,19 +146,7 @@ class CommandController
         }
 
         override fun onEntitySelectInteraction(event: EntitySelectInteractionEvent) {
-            val guild = event.guild
-            val actionData = ActionDataManager[event.componentId]
-            if (actionData == null) {
-                event.reply(i18n.format("command.error.action")).setEphemeral(true).queue()
-                return
-            }
-            val command = getCommandFromComponentId(actionData.componentIdData)
-            if (guild == null || command == null) {
-                event.reply(i18n.format("command.error.internal")).queue()
-                return
-            }
-
-            ActionDataManager.removeActionData(event.componentId)
+            val (guild, actionData, command) = getDataFromInteractionOrSendError(event) ?: return
 
             val data =
                 BotEntitySelectData(
@@ -210,6 +176,24 @@ class CommandController
             }
 
             command.onEntitySelect(data)
+        }
+
+        private fun getDataFromInteractionOrSendError(event: ComponentInteraction): Triple<Guild, BotActionData, RunnableCommandServiceClass>? {
+            val guild = event.guild
+            val actionData = ActionDataManager[event.componentId]
+            if (actionData == null) {
+                event.reply(i18n.format("command.error.action")).setEphemeral(true).queue()
+                return null
+            }
+            val command = getCommandFromComponentId(actionData.componentIdData)
+            if (guild == null || command == null) {
+                event.reply(i18n.format("command.error.internal")).queue()
+                return null
+            }
+
+            ActionDataManager.removeActionData(event.componentId)
+
+            return Triple(guild, actionData, command)
         }
 
         fun getCommand(

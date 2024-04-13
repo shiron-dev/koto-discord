@@ -9,6 +9,11 @@ spring:
       properties:
         hibernate:
           dialect: org.hibernate.community.dialect.SQLiteDialect
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    url: jdbc:sqlite:./db.sqlite3
+    validate-on-migrate: true
   profiles:
     include: env
 app:
