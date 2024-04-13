@@ -16,11 +16,4 @@ data class VCNotificationData(
     @Column(columnDefinition = "boolean default true")
     val isSmart: Boolean = true,
     val mentionId: Long?,
-) {
-    val vcName: String
-        get() =
-            run {
-                val vcId = vcCategoryId ?: vcChannelId
-                return if (vcId == null) "`サーバー全体`" else "<#$vcId>"
-            }
-}
+)

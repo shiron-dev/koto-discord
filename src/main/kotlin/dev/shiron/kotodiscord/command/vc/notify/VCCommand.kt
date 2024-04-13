@@ -153,14 +153,8 @@ class VCCommand
                         vcService.setVCNotification(data.copy(mentionId = mention.idLong))
                         event.send(
                             i18n.format(
-                                "command.message.vc_notification.set_mention.success",
-                                (index + 1).toString(),
-                                data.vcName,
-                                "<#${data.textChannelId}>",
-                                i18n.format(
-                                    "command.message.vc_notification.set_mention.true",
-                                    mention.asMention,
-                                ),
+                                "command.message.vc_notification.success",
+                                getConfString(data, event.guild, true),
                             ),
                         )
                     }
@@ -176,10 +170,8 @@ class VCCommand
                     vcService.removeVCNotification(data)
                     event.send(
                         i18n.format(
-                            "command.message.vc_notification.remove.success",
-                            (index + 1).toString(),
-                            data.vcName,
-                            "<#${data.textChannelId}>",
+                            "command.message.vc_notification.success",
+                            getConfString(data, event.guild, true),
                         ),
                     )
                 }
@@ -189,15 +181,8 @@ class VCCommand
                     vcService.setVCNotification(data.copy(isSmart = !data.isSmart))
                     event.send(
                         i18n.format(
-                            "command.message.vc_notification.set_smart.success",
-                            (index + 1).toString(),
-                            data.vcName,
-                            "<#${data.textChannelId}>",
-                            if (!data.isSmart) {
-                                i18n.format("command.message.vc_notification.set_smart.true")
-                            } else {
-                                i18n.format("command.message.vc_notification.set_smart.false")
-                            },
+                            "command.message.vc_notification.success",
+                            getConfString(data, event.guild, true),
                         ),
                     )
                 }
@@ -221,11 +206,8 @@ class VCCommand
                         vcService.setVCNotification(data.copy(mentionId = null))
                         event.send(
                             i18n.format(
-                                "command.message.vc_notification.set_mention.success",
-                                (index + 1).toString(),
-                                data.vcName,
-                                "<#${data.textChannelId}>",
-                                i18n.format("command.message.vc_notification.set_mention.false"),
+                                "command.message.vc_notification.success",
+                                getConfString(data, event.guild, true),
                             ),
                         )
                     }
@@ -251,20 +233,20 @@ class VCCommand
                 return
             }
 
-            vcService.setVCNotification(
-                VCNotificationData(
-                    guildId = guild.idLong,
-                    vcCategoryId = categoryChannel?.idLong,
-                    vcChannelId = vcChannel?.idLong,
-                    textChannelId = textChannel.idLong,
-                    mentionId = null,
-                ),
-            )
+            val conf =
+                vcService.setVCNotification(
+                    VCNotificationData(
+                        guildId = guild.idLong,
+                        vcCategoryId = categoryChannel?.idLong,
+                        vcChannelId = vcChannel?.idLong,
+                        textChannelId = textChannel.idLong,
+                        mentionId = null,
+                    ),
+                )
             event.send(
                 i18n.format(
-                    "command.message.vc_notification.set.success",
-                    vcChannel?.asMention ?: categoryChannel?.asMention ?: "サーバー全体",
-                    textChannel.asMention,
+                    "command.message.vc_notification.success",
+                    getConfString(conf, guild, true),
                 ),
             )
         }
@@ -292,7 +274,11 @@ class VCCommand
         ): String {
             return i18n.format(
                 "command.message.vc_notification.conf",
-                data.vcName,
+                if (asMention) {
+                    data.vcChannelId?.let { guild.getVoiceChannelById(it)?.asMention } ?: data.vcCategoryId?.let { guild.getCategoryById(it)?.asMention } ?: "サーバー全体"
+                } else {
+                    data.vcChannelId?.let { guild.getVoiceChannelById(it)?.name } ?: data.vcCategoryId?.let { guild.getCategoryById(it)?.name } ?: "サーバー全体"
+                },
                 if (asMention) {
                     guild.getTextChannelById(data.textChannelId)?.asMention
                 } else {
