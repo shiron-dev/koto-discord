@@ -78,13 +78,7 @@ class VCCommand
 
                 msg +=
                     dataList.joinToString("\n") {
-                        "- ${it.vcName} -> <#${it.textChannelId}> ${
-                            if (it.isSmart) {
-                                i18n.format("command.message.vc_notification.set_smart.true")
-                            } else {
-                                i18n.format("command.message.vc_notification.set_smart.false")
-                            }
-                        }"
+                        "- " + getConfString(it)
                     }
 
                 components.add(genBtnSetSmart(cmd.shared))
@@ -221,16 +215,35 @@ class VCCommand
                     val vcName = vcId.let { guild.channels.find { it.idLong == vcId }?.name }?.let { "#$it" } ?: "サーバー全体"
                     val textName = guild.channels.find { it.idLong == vcNotificationData.textChannelId }?.name?.let { "#$it" } ?: "不明"
                     addOption(
-                        "${index + 1} $vcName -> $textName ${
-                            if (vcNotificationData.isSmart) {
-                                i18n.format("command.message.vc_notification.set_smart.true")
-                            } else {
-                                i18n.format("command.message.vc_notification.set_smart.false")
-                            }
-                        }",
+                        "${index + 1}" +
+                            i18n.format(
+                                "command.message.vc_notification.conf",
+                                vcName,
+                                textName,
+                                if (vcNotificationData.isSmart) {
+                                    i18n.format("command.message.vc_notification.set_smart.true")
+                                } else {
+                                    i18n.format("command.message.vc_notification.set_smart.false")
+                                },
+                            ),
                         "${index + 1}",
                     )
                 }
             }.build()
+        }
+
+        private fun getConfString(
+            data: VCNotificationData,
+        ): String {
+            return i18n.format(
+                "command.message.vc_notification.conf",
+                data.vcName,
+                "<#${data.textChannelId}>",
+                if (data.isSmart) {
+                    i18n.format("command.message.vc_notification.set_smart.true")
+                } else {
+                    i18n.format("command.message.vc_notification.set_smart.false")
+                },
+            )
         }
     }
