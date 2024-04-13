@@ -1,4 +1,4 @@
-package dev.shiron.kotodiscord.service.command.bump
+package dev.shiron.kotodiscord.command.bump
 
 import dev.shiron.kotodiscord.bot.KotoMain
 import dev.shiron.kotodiscord.domain.BumpConfigData

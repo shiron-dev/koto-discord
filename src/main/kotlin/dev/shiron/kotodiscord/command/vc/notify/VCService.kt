@@ -1,4 +1,4 @@
-package dev.shiron.kotodiscord.service.command.vc.notify
+package dev.shiron.kotodiscord.command.vc.notify
 
 import dev.shiron.kotodiscord.domain.VCNotificationData
 import dev.shiron.kotodiscord.i18n.I18n

@@ -1,4 +1,4 @@
-package dev.shiron.kotodiscord.service.command
+package dev.shiron.kotodiscord.command
 
 import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.util.data.action.BotSlashCommandData
