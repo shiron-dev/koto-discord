@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/shiron-dev/koto-discord/compare/v1.3.1...v1.3.2) (2024-04-14)
+
+
+### Bug Fixes
+
+* vc service ([bec6abd](https://github.com/shiron-dev/koto-discord/commit/bec6abd820258e463dd63090a3a0f458295f3b74))
+
 ## [1.3.1](https://github.com/shiron-dev/koto-discord/compare/v1.3.0...v1.3.1) (2024-04-13)
 
 
