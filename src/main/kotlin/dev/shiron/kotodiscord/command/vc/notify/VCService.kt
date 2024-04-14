@@ -59,43 +59,44 @@ class VCService
             val smartTextDataList = mutableListOf<SmartTextData>()
 
             for (data in allData) {
-                if (!data.isSmart) {
-                    val isJoin =
-                        event.channelJoined != null && (
-                            data.vcChannelId == event.channelJoined?.idLong ||
-                                data.vcCategoryId == event.channelJoined?.parentCategoryIdLong ||
-                                (data.vcCategoryId == null && data.vcChannelId == null)
-                        )
-                    val isLeft =
-                        event.channelLeft != null && (
-                            data.vcChannelId == event.channelLeft?.idLong ||
-                                data.vcCategoryId == event.channelLeft?.parentCategoryIdLong ||
-                                (data.vcCategoryId == null && data.vcChannelId == null)
-                        )
-
-                    if (isJoin || isLeft) {
-                        nonSmartTextDataList.add(
-                            NonSmartTextData(
-                                data.textChannelId,
-                                isJoin,
-                                isLeft,
-                                data,
-                            ),
-                        )
-                    }
-                } else {
-                    val channels = listOfNotNull(event.channelLeft, event.channelJoined)
-                    for (channel in channels) {
-                        val members = channel.members
-                        smartTextDataList.add(
-                            SmartTextData(
-                                data.textChannelId,
-                                members.size == 1 && event.channelJoined != null,
-                                members.isEmpty() && event.channelLeft != null,
-                                members,
-                                data,
-                            ),
-                        )
+                val isJoin =
+                    event.channelJoined != null && (
+                        data.vcChannelId == event.channelJoined?.idLong ||
+                            data.vcCategoryId == event.channelJoined?.parentCategoryIdLong ||
+                            (data.vcCategoryId == null && data.vcChannelId == null)
+                    )
+                val isLeft =
+                    event.channelLeft != null && (
+                        data.vcChannelId == event.channelLeft?.idLong ||
+                            data.vcCategoryId == event.channelLeft?.parentCategoryIdLong ||
+                            (data.vcCategoryId == null && data.vcChannelId == null)
+                    )
+                if (isJoin || isLeft) {
+                    if (!data.isSmart) {
+                        if (isJoin || isLeft) {
+                            nonSmartTextDataList.add(
+                                NonSmartTextData(
+                                    data.textChannelId,
+                                    isJoin,
+                                    isLeft,
+                                    data,
+                                ),
+                            )
+                        }
+                    } else {
+                        val channels = listOfNotNull(event.channelLeft, event.channelJoined)
+                        for (channel in channels) {
+                            val members = channel.members
+                            smartTextDataList.add(
+                                SmartTextData(
+                                    data.textChannelId,
+                                    members.size == 1 && event.channelJoined != null,
+                                    members.isEmpty() && event.channelLeft != null,
+                                    members,
+                                    data,
+                                ),
+                            )
+                        }
                     }
                 }
             }
