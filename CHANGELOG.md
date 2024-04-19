@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.2](https://github.com/shiron-dev/koto-discord/compare/v1.4.1...v1.4.2) (2024-04-19)
+
+
+### Bug Fixes
+
+* trans only first reaction ([1a29b4c](https://github.com/shiron-dev/koto-discord/commit/1a29b4c3f50006073bed3121afa146fea063cf25))
+* trans only first reaction ([ed66edf](https://github.com/shiron-dev/koto-discord/commit/ed66edfbfec116aeb8218be5d7d2ebf1fb5f04d7))
+
 ## [1.4.1](https://github.com/shiron-dev/koto-discord/compare/v1.4.0...v1.4.1) (2024-04-19)
 
 
