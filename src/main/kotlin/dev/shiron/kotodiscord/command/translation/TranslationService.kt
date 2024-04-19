@@ -26,6 +26,9 @@ class TranslationService
                 val reaction = event.reaction.emoji.name
 
                 val transCode = TranslationReaction.values().find { it.reactionEmoji == reaction } ?: return@runBlocking
+                val count = event.reaction.count
+
+                if (count < 2) return@runBlocking
 
                 val channel = event.guild.getTextChannelById(event.channel.id) ?: return@runBlocking
                 val message = channel.retrieveMessageById(event.messageId).complete() ?: return@runBlocking
