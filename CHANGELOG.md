@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/shiron-dev/koto-discord/compare/v1.4.0...v1.4.1) (2024-04-19)
+
+
+### Bug Fixes
+
+* env ([5a407ca](https://github.com/shiron-dev/koto-discord/commit/5a407ca21bf27f475adbfd645aa35aca23344a75))
+
 ## [1.4.0](https://github.com/shiron-dev/koto-discord/compare/v1.3.2...v1.4.0) (2024-04-19)
 
 
