@@ -9,4 +9,5 @@ data class AppProperties(
     var metricsDir: String? = null,
     var actionDataCleanMin: Int? = null,
     var inviteLink: String? = null,
+    var deeplApiKey: String? = null,
 )
