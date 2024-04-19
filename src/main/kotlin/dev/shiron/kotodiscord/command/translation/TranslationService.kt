@@ -12,6 +12,7 @@ enum class TranslationReaction(val deeplCode: String, val reactionEmoji: String)
     JAPANESE("ja", "🇯🇵"),
     ENGLISH_US("en", "🇺🇸"),
     ENGLISH_UK("en", "🇬🇧"),
+    FINNISH("fi", "🇫🇮"),
 }
 
 @Component
