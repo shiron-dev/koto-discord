@@ -40,6 +40,7 @@ class KotoMain
                     GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_VOICE_STATES,
                     GatewayIntent.MESSAGE_CONTENT,
+                    GatewayIntent.GUILD_MESSAGE_REACTIONS,
                 )
                     .setRawEventsEnabled(true)
                     .setActivity(
