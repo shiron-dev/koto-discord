@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/shiron-dev/koto-discord/compare/v1.3.2...v1.4.0) (2024-04-19)
+
+
+### Features
+
+* translation service ([65da8d9](https://github.com/shiron-dev/koto-discord/commit/65da8d9972dcf532f3424ca8716b9a126a0b04fb))
+
 ## [1.3.2](https://github.com/shiron-dev/koto-discord/compare/v1.3.1...v1.3.2) (2024-04-14)
 
 
