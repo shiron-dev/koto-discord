@@ -1,6 +1,5 @@
 package dev.shiron.kotodiscord.command.bump
 
-import dev.shiron.kotodiscord.bot.KotoMain
 import dev.shiron.kotodiscord.domain.BumpConfigData
 import dev.shiron.kotodiscord.domain.BumpJobQueueData
 import dev.shiron.kotodiscord.i18n.I18n
@@ -16,7 +15,6 @@ import dev.shiron.kotodiscord.vars.BumpVars
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.selections.EntitySelectMenu
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -192,31 +190,6 @@ class BumpCommand
                         mentionId.asMention,
                     ),
                 )
-            }
-        }
-
-        @Scheduled(fixedDelay = BumpVars.BUMP_SCHEDULE_MS)
-        fun bumpNotifyCommand() {
-            val now = LocalDateTime.now()
-            val jobs = jobQueueRepository.findAllByExecAtBefore(now) ?: return
-
-            for (job in jobs) {
-                val config = job.bumpConfig
-                val mention = config.mentionId?.let { "<@$it> " } ?: ""
-
-                try {
-                    KotoMain.jda.getGuildById(config.guildId)?.getTextChannelById(config.channelId)?.sendMessage(
-                        mention +
-                            i18n.format(
-                                "service.message.bump",
-                                BumpVars.BUMP_COMMAND_MENTION,
-                            ),
-                    )?.queue()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-                jobQueueRepository.delete(job)
             }
         }
     }
