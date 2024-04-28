@@ -3,6 +3,7 @@ package dev.shiron.kotodiscord.command.vc.notify
 import dev.shiron.kotodiscord.domain.VCNotificationData
 import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.repository.VCNotificationDataRepository
+import dev.shiron.kotodiscord.util.getMentionable
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
@@ -148,7 +149,7 @@ class VCService
                     )
                 }
 
-                val mention = textData.config.mentionId?.let { guild.getMemberById(it)?.asMention }
+                val mention = getMentionable(guild, textData.config.mentionId)?.asMention
                 guild.getTextChannelById(textData.textChannelId)?.sendMessage(mention ?: "")?.setEmbeds(eb.build())?.queue()
             }
 
@@ -188,7 +189,7 @@ class VCService
 
                 val message = VCSmartNotifyManager[textData.config]?.message
                 if (message == null) {
-                    val mention = textData.config.mentionId?.let { guild.getMemberById(it)?.asMention }
+                    val mention = getMentionable(guild, textData.config.mentionId)?.asMention
                     guild.getTextChannelById(textData.textChannelId)?.sendMessage(mention ?: "")?.setEmbeds(eb.build())?.queue {
                         VCSmartNotifyManager.new(
                             VCSmartNotifyData(

@@ -5,6 +5,7 @@ import dev.shiron.kotodiscord.domain.BumpJobQueueData
 import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.repository.BumpConfigDataRepository
 import dev.shiron.kotodiscord.repository.BumpJobQueueDataRepository
+import dev.shiron.kotodiscord.util.getMentionable
 import dev.shiron.kotodiscord.vars.BumpVars
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -44,29 +45,29 @@ class BumpService
             }
         }
 
-    @Scheduled(fixedDelay = BumpVars.BUMP_SCHEDULE_MS)
-    fun bumpNotifyCommand() {
-        val now = LocalDateTime.now()
-        val jobs = jobQueueRepository.findAllByExecAtBefore(now) ?: return
+        @Scheduled(fixedDelay = BumpVars.BUMP_SCHEDULE_MS)
+        fun bumpNotifyCommand() {
+            val now = LocalDateTime.now()
+            val jobs = jobQueueRepository.findAllByExecAtBefore(now) ?: return
 
-        for (job in jobs) {
-            val config = job.bumpConfig
-            val guild = KotoMain.jda.getGuildById(config.guildId)
-            val mention = config.mentionId?.let { guild?.getMemberById(it)?.asMention ?: guild?.getRoleById(it)?.asMention }
+            for (job in jobs) {
+                val config = job.bumpConfig
+                val guild = KotoMain.jda.getGuildById(config.guildId)
+                val mention = guild?.let { getMentionable(it, config.mentionId) }?.asMention
 
-            try {
-                guild?.getTextChannelById(config.channelId)?.sendMessage(
-                    (mention ?: "") +
+                try {
+                    guild?.getTextChannelById(config.channelId)?.sendMessage(
+                        (mention ?: "") +
                             i18n.format(
                                 "service.message.bump",
                                 BumpVars.BUMP_COMMAND_MENTION,
                             ),
-                )?.queue()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+                    )?.queue()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
 
-            jobQueueRepository.delete(job)
+                jobQueueRepository.delete(job)
+            }
         }
-    }
     }
