@@ -3,6 +3,7 @@ package dev.shiron.kotodiscord.command.vc.notify
 import dev.shiron.kotodiscord.domain.VCNotificationData
 import dev.shiron.kotodiscord.i18n.I18n
 import dev.shiron.kotodiscord.util.data.action.*
+import dev.shiron.kotodiscord.util.getMentionable
 import dev.shiron.kotodiscord.util.meta.SingleCommandEnum
 import dev.shiron.kotodiscord.util.service.SingleCommandServiceClass
 import net.dv8tion.jda.api.entities.Guild
@@ -292,7 +293,7 @@ class VCCommand
                 i18n.format(
                     "command.message.vc_notification.set_mention.${data.mentionId != null}",
                     if (asMention) {
-                        data.mentionId?.let { (guild.getMemberById(it) ?: guild.getRoleById(it))?.asMention }
+                        getMentionable(guild, data.mentionId)?.asMention
                     } else {
                         data.mentionId?.let { guild.getMemberById(it)?.effectiveName ?: guild.getRoleById(it)?.name }
                     } ?: "@不明",

@@ -1,6 +1,5 @@
 package dev.shiron.kotodiscord.command.bump
 
-import dev.shiron.kotodiscord.bot.KotoMain
 import dev.shiron.kotodiscord.domain.BumpConfigData
 import dev.shiron.kotodiscord.domain.BumpJobQueueData
 import dev.shiron.kotodiscord.i18n.I18n
@@ -16,7 +15,6 @@ import dev.shiron.kotodiscord.vars.BumpVars
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.selections.EntitySelectMenu
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -83,7 +81,7 @@ class BumpCommand
                 cmd.send(
                     i18n.format(
                         "command.message.bump.msg",
-                        "<#${config.channelId}>",
+                        cmd.guild.getTextChannelById(config.channelId)?.asMention ?: "",
                         config.mentionId?.let { " (<@$it>)" } ?: "",
                         if (LocalDateTime.now().isAfter(job.execAt)) {
                             i18n.format("command.message.bump.after", BumpVars.BUMP_COMMAND_MENTION)
@@ -157,7 +155,7 @@ class BumpCommand
                     event.send(
                         i18n.format(
                             "command.message.bump.unseted",
-                            "<#${config.channelId}>",
+                            event.guild.getTextChannelById(config.channelId)?.asMention ?: "",
                             config.mentionId?.let { " (<@$it>)" } ?: "",
                         ),
                     )
@@ -185,6 +183,16 @@ class BumpCommand
 
             if (event.actionData.key == "select_mention") {
                 val mentionId = event.values.first()
+
+                if (event.guild.getTextChannelById(config.channelId) == null) {
+                    event.send(
+                        i18n.format(
+                            "command.message.bump.error.text",
+                        ),
+                    )
+                    return
+                }
+
                 configRepository.save(config.copy(mentionId = mentionId.idLong))
                 event.send(
                     i18n.format(
@@ -192,31 +200,6 @@ class BumpCommand
                         mentionId.asMention,
                     ),
                 )
-            }
-        }
-
-        @Scheduled(fixedDelay = BumpVars.BUMP_SCHEDULE_MS)
-        fun bumpNotifyCommand() {
-            val now = LocalDateTime.now()
-            val jobs = jobQueueRepository.findAllByExecAtBefore(now) ?: return
-
-            for (job in jobs) {
-                val config = job.bumpConfig
-                val mention = config.mentionId?.let { "<@$it> " } ?: ""
-
-                try {
-                    KotoMain.jda.getGuildById(config.guildId)?.getTextChannelById(config.channelId)?.sendMessage(
-                        mention +
-                            i18n.format(
-                                "service.message.bump",
-                                BumpVars.BUMP_COMMAND_MENTION,
-                            ),
-                    )?.queue()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-                jobQueueRepository.delete(job)
             }
         }
     }
