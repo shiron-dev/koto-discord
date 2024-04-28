@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.3](https://github.com/shiron-dev/koto-discord/compare/v1.4.2...v1.4.3) (2024-04-28)
+
+
+### Bug Fixes
+
+* bump mention ([52968a8](https://github.com/shiron-dev/koto-discord/commit/52968a8dcea82eb0a526ab95c84c5cd22f986444))
+* bump mention ([432a900](https://github.com/shiron-dev/koto-discord/commit/432a900f4200a4041f1ab4cb8113ff386b2b9509))
+* role or user mention ([2e3ef14](https://github.com/shiron-dev/koto-discord/commit/2e3ef14e6d48ac7246395ea0ef60016dc449fe35))
+
 ## [1.4.2](https://github.com/shiron-dev/koto-discord/compare/v1.4.1...v1.4.2) (2024-04-19)
 
 
