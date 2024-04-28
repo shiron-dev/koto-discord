@@ -81,7 +81,7 @@ class BumpCommand
                 cmd.send(
                     i18n.format(
                         "command.message.bump.msg",
-                        "<#${config.channelId}>",
+                        cmd.guild.getTextChannelById(config.channelId)?.asMention ?: "",
                         config.mentionId?.let { " (<@$it>)" } ?: "",
                         if (LocalDateTime.now().isAfter(job.execAt)) {
                             i18n.format("command.message.bump.after", BumpVars.BUMP_COMMAND_MENTION)
@@ -155,7 +155,7 @@ class BumpCommand
                     event.send(
                         i18n.format(
                             "command.message.bump.unseted",
-                            "<#${config.channelId}>",
+                            event.guild.getTextChannelById(config.channelId)?.asMention ?: "",
                             config.mentionId?.let { " (<@$it>)" } ?: "",
                         ),
                     )
@@ -183,6 +183,16 @@ class BumpCommand
 
             if (event.actionData.key == "select_mention") {
                 val mentionId = event.values.first()
+
+                if (event.guild.getTextChannelById(config.channelId) == null) {
+                    event.send(
+                        i18n.format(
+                            "command.message.bump.error.text",
+                        ),
+                    )
+                    return
+                }
+
                 configRepository.save(config.copy(mentionId = mentionId.idLong))
                 event.send(
                     i18n.format(
