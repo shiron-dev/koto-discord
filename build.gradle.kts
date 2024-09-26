@@ -4,7 +4,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
-    kotlin("plugin.jpa") version "1.8.22"
+    kotlin("plugin.jpa") version "1.9.25"
 
     id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
 
