@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.4](https://github.com/shiron-dev/koto-discord/compare/v1.4.3...v1.4.4) (2025-02-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.code.gson:gson to v2.12.0 ([#83](https://github.com/shiron-dev/koto-discord/issues/83)) ([aaa2d3e](https://github.com/shiron-dev/koto-discord/commit/aaa2d3e3b56faebd3d1d128bc0e172e21c8734e7))
+* **deps:** update dependency com.google.code.gson:gson to v2.12.1 ([#84](https://github.com/shiron-dev/koto-discord/issues/84)) ([1be72c1](https://github.com/shiron-dev/koto-discord/commit/1be72c17118cad0abe852d06b8c1baeb6eb47ffa))
+* **deps:** update dependency net.dv8tion:jda to v5.2.2 ([#78](https://github.com/shiron-dev/koto-discord/issues/78)) ([89bdc2c](https://github.com/shiron-dev/koto-discord/commit/89bdc2c10b1f46211261af45f0265c9d174b7bc8))
+* **deps:** update dependency net.dv8tion:jda to v5.2.3 ([#82](https://github.com/shiron-dev/koto-discord/issues/82)) ([59afed6](https://github.com/shiron-dev/koto-discord/commit/59afed676da45d4897e20f2c738c27a3fff9316d))
+* **deps:** update dependency net.dv8tion:jda to v5.3.0 ([#85](https://github.com/shiron-dev/koto-discord/issues/85)) ([e293535](https://github.com/shiron-dev/koto-discord/commit/e2935359846fbbf9d5a8e0396caeda30bba0860d))
+* **deps:** update dependency org.jetbrains.kotlinx:kotlinx-coroutines-core to v1.10.1 ([#79](https://github.com/shiron-dev/koto-discord/issues/79)) ([37f3854](https://github.com/shiron-dev/koto-discord/commit/37f3854b66d10d8cd25d4246e52fbd1b89865f9f))
+
 ## [1.4.3](https://github.com/shiron-dev/koto-discord/compare/v1.4.2...v1.4.3) (2024-04-28)
 
 
