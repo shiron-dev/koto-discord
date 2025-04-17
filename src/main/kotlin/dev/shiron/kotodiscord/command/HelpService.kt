@@ -84,6 +84,6 @@ class HelpService
 
         private fun getHelp(command: String): String {
             val cmdStr = command.replace(" ", ".")
-            return i18n.format("command.help.$cmdStr")
+            return i18n.format("command.description.$cmdStr")
         }
     }
