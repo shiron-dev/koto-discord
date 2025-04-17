@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.4.4](https://github.com/shiron-dev/koto-discord/compare/v1.4.3...v1.4.4) (2025-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.google.code.gson:gson to v2.12.0 ([#83](https://github.com/shiron-dev/koto-discord/issues/83)) ([aaa2d3e](https://github.com/shiron-dev/koto-discord/commit/aaa2d3e3b56faebd3d1d128bc0e172e21c8734e7))
+* **deps:** update dependency com.google.code.gson:gson to v2.12.1 ([#84](https://github.com/shiron-dev/koto-discord/issues/84)) ([1be72c1](https://github.com/shiron-dev/koto-discord/commit/1be72c17118cad0abe852d06b8c1baeb6eb47ffa))
+* **deps:** update dependency com.google.code.gson:gson to v2.13.0 ([#97](https://github.com/shiron-dev/koto-discord/issues/97)) ([9acd8c2](https://github.com/shiron-dev/koto-discord/commit/9acd8c2700b5b49a449206afc4092fd8eee98ad0))
+* **deps:** update dependency net.dv8tion:jda to v5.2.2 ([#78](https://github.com/shiron-dev/koto-discord/issues/78)) ([89bdc2c](https://github.com/shiron-dev/koto-discord/commit/89bdc2c10b1f46211261af45f0265c9d174b7bc8))
+* **deps:** update dependency net.dv8tion:jda to v5.2.3 ([#82](https://github.com/shiron-dev/koto-discord/issues/82)) ([59afed6](https://github.com/shiron-dev/koto-discord/commit/59afed676da45d4897e20f2c738c27a3fff9316d))
+* **deps:** update dependency net.dv8tion:jda to v5.3.0 ([#85](https://github.com/shiron-dev/koto-discord/issues/85)) ([e293535](https://github.com/shiron-dev/koto-discord/commit/e2935359846fbbf9d5a8e0396caeda30bba0860d))
+* **deps:** update dependency net.dv8tion:jda to v5.3.1 ([#88](https://github.com/shiron-dev/koto-discord/issues/88)) ([a8b4280](https://github.com/shiron-dev/koto-discord/commit/a8b42809bff088bda35b23795b66487dd464221e))
+* **deps:** update dependency net.dv8tion:jda to v5.3.2 ([#95](https://github.com/shiron-dev/koto-discord/issues/95)) ([1d3e55b](https://github.com/shiron-dev/koto-discord/commit/1d3e55bb42a872b14aeac3a412569d26853978b4))
+* **deps:** update dependency org.jetbrains.kotlinx:kotlinx-coroutines-core to v1.10.1 ([#79](https://github.com/shiron-dev/koto-discord/issues/79)) ([37f3854](https://github.com/shiron-dev/koto-discord/commit/37f3854b66d10d8cd25d4246e52fbd1b89865f9f))
+* **deps:** update dependency org.jetbrains.kotlinx:kotlinx-coroutines-core to v1.10.2 ([#96](https://github.com/shiron-dev/koto-discord/issues/96)) ([d394903](https://github.com/shiron-dev/koto-discord/commit/d394903a6130646ad9acd8e25aa9fac1ef1d3888))
+* help command ([89685b5](https://github.com/shiron-dev/koto-discord/commit/89685b5e2968eb803156bbd36fc0025dbca1b5ae))
+
 ## [1.4.3](https://github.com/shiron-dev/koto-discord/compare/v1.4.2...v1.4.3) (2024-04-28)
 
 
