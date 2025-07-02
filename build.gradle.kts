@@ -8,7 +8,7 @@ plugins {
 
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
 
-    id("com.palantir.git-version") version "3.2.0"
+    id("com.palantir.git-version") version "3.4.0"
 }
 
 group = "dev.shiron"
