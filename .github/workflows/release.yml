@@ -15,7 +15,7 @@ jobs:
     outputs:
       release-created: ${{ steps.release.outputs.release_created }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - name: Release please
@@ -28,7 +28,7 @@ jobs:
     needs: release-please
     if: ${{ needs.release-please.outputs.release-created }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Create env file
         run: echo "${{ secrets.ENV_FILE }}" > src/main/resources/application-env.yml
       - uses: actions/setup-java@v4
